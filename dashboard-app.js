@@ -75,7 +75,6 @@ const sectionOrder = ["overview", "payment", "results", "tables", "profiles", "s
 navButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
 mobileNavButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
 logoutButton.addEventListener("click", signOut);
-profileEditForm?.addEventListener("click", (e) => { e.stopPropagation(); });
 themeToggleButton.addEventListener("click", toggleTheme);
 topbarThemeToggleButton.addEventListener("click", toggleTheme);
 installButton.addEventListener("click", promptInstall);
