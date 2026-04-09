@@ -6,13 +6,13 @@
   <title>Elite Arrows Dashboard</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#1a2b3d">
-  <link rel="stylesheet" href="styles.css?v=13">
+  <link rel="stylesheet" href="styles.css?v=14">
 </head>
 <body class="dashboard-page">
   <div class="page-shell page-shell-wide">
     <section class="app-shell">
       <aside class="app-sidebar panel">
-        <div class="sidebar-logo">
+        <div class="sidebar-logo" style="display:none">
           <img src="/EliteArrows%20logo.jpg" alt="Elite Arrows Logo">
         </div>
         <nav class="sidebar-nav">
@@ -35,6 +35,16 @@
       </aside>
 
       <main class="app-main">
+        <header class="site-header">
+          <div class="header-logo">
+            <img src="/EliteArrows%20logo.jpg" alt="Elite Arrows">
+          </div>
+          <div class="header-title">
+            <span class="header-brand">Elite Arrows</span>
+            <span class="header-tagline">Darts League</span>
+          </div>
+        </header>
+
         <section class="panel profile-section" id="profileHeader">
           <div class="profile-hero">
             <div class="profile-avatar-wrap">
@@ -298,6 +308,6 @@
     <button class="mobile-nav-button" type="button" data-view="tables">Table</button>
     <button class="mobile-nav-button" type="button" data-view="profiles">Players</button>
   </nav>
-  <script src="dashboard-app.js?v=10"></script>
+  <script src="dashboard-app.js?v=11"></script>
 </body>
 </html>
