@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Arrows Dashboard</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#09111a">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-page">
+  <div class="page-shell page-shell-wide">
+    <section class="app-shell">
+      <aside class="app-sidebar panel">
+        <div>
+          <p class="eyebrow">Elite Arrows</p>
+          <h2>Dashboard</h2>
+        </div>
+        <nav class="sidebar-nav">
+          <button class="nav-button is-active" type="button" data-view="overview">Home</button>
+          <button class="nav-button" type="button" data-view="payment">Subscription</button>
+          <button class="nav-button" type="button" data-view="tables">Table</button>
+          <button class="nav-button" type="button" data-view="results">Results</button>
+          <button class="nav-button" type="button" data-view="matches">Match Log</button>
+          <button class="nav-button" type="button" data-view="profiles">Players</button>
+          <button class="nav-button" type="button" data-view="fixtures">Fixtures</button>
+          <button class="nav-button" type="button" data-view="submit">Submit Result</button>
+          <button class="nav-button" id="adminNavButton" type="button" data-view="admin" hidden>Admin</button>
+        </nav>
+        <div class="sidebar-actions">
+          <button class="ghost-button" id="installButton" type="button" hidden>Install App</button>
+          <button class="ghost-button" id="themeToggleButton" type="button">Light Mode</button>
+          <a class="ghost-button button-link" href="/chat.html">Open Chat</a>
+          <button class="ghost-button" id="openProfileButton" type="button">My Profile</button>
+          <button class="ghost-button" id="logoutButton" type="button">Sign Out</button>
+        </div>
+      </aside>
+
+      <main class="app-main">
+        <header class="app-topbar panel">
+          <div>
+            <p class="eyebrow">Main Site</p>
+            <h2>Elite Arrows Dashboard</h2>
+            <p class="hero-copy">Swipe on mobile or use the bottom tabs to move through the app.</p>
+          </div>
+          <div class="topbar-stack">
+            <div class="hero-metrics hero-metrics-inline" id="dashboardMetrics"></div>
+            <div class="topbar-actions mobile-hidden">
+              <button class="ghost-button" id="topbarInstallButton" type="button" hidden>Install App</button>
+              <button class="ghost-button" id="topbarThemeToggleButton" type="button">Light Mode</button>
+            </div>
+          </div>
+        </header>
+
+        <section class="panel season-banner">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Season</p><h2 id="seasonTitle">2026 Countdown</h2></div>
+          </div>
+          <div class="hero-metrics" id="seasonMetrics"></div>
+        </section>
+
+        <section class="panel section-view is-active" data-section="overview">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Overview</p><h2>Quick Snapshot</h2></div>
+          </div>
+          <div class="hero-metrics" id="overviewMetrics"></div>
+          <div class="section-gap">
+            <button class="primary-button" id="openSubscriptionButton" type="button">Open Subscription</button>
+          </div>
+          <div class="section-gap">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Announcements</p><h3>Latest League Updates</h3></div>
+            </div>
+            <div id="announcementCards" class="result-list"></div>
+          </div>
+        </section>
+
+        <section class="panel section-view" data-section="payment">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Subscription</p><h2>Subscription And Payment</h2></div>
+          </div>
+          <div id="paymentStatusCard" class="result-list"></div>
+          <div class="division-table-list section-gap">
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Available Payment Methods</h3></div></div>
+              <div id="paymentOptionsCard" class="stack-form"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Submit Payment</h3></div></div>
+              <form id="paymentForm" class="stack-form">
+                <label>Method
+                  <select name="paymentMethod" required>
+                    <option value="">Choose a payment method</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Monzo">Monzo</option>
+                  </select>
+                </label>
+                <label>Payment reference<input name="paymentReference" type="text" required></label>
+                <label>Optional proof of payment<input name="paymentProof" type="file" accept="image/*,video/*,audio/*"></label>
+                <button class="primary-button" type="submit">Submit Payment</button>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section-view" data-section="tables">
+          <div class="panel-heading">
+            <div><p class="eyebrow">League</p><h2>Overall Table</h2></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>#</th><th>Player</th><th>Division</th><th>P</th><th>W</th><th>D</th><th>L</th><th>Legs</th><th>Diff</th><th>Pts</th></tr>
+              </thead>
+              <tbody id="overallStandingsBody"></tbody>
+            </table>
+          </div>
+          <div id="divisionTables" class="division-table-list section-gap"></div>
+        </section>
+
+        <section class="panel section-view" data-section="results">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Approved Results</p><h2>Latest Approved Matches</h2></div>
+          </div>
+          <div id="recentResults" class="result-list"></div>
+        </section>
+
+        <section class="panel section-view" data-section="matches">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Match Log</p><h2>Approved Match Log</h2></div>
+          </div>
+          <div id="matchCards" class="fixture-list"></div>
+        </section>
+
+        <section class="panel section-view" data-section="profiles">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Profiles</p><h2>Registered Players</h2></div>
+          </div>
+          <div id="profilesByDivision" class="division-table-list"></div>
+        </section>
+
+        <section class="panel section-view" data-section="fixtures">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Fixtures</p><h2>Scheduled Fixtures</h2></div>
+          </div>
+          <div id="fixtureCards" class="fixture-list"></div>
+        </section>
+
+        <section class="panel section-view" data-section="submit">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Submit</p><h2>Send A Result For Approval</h2></div>
+          </div>
+          <form id="matchForm" class="stack-form">
+            <label>Opponent<select id="opponentId" name="opponentId" required></select></label>
+            <label>Linked fixture<select id="fixtureId" name="fixtureId"><option value="">No linked fixture</option></select></label>
+            <label>Match date<input name="matchDate" type="date" required></label>
+            <div class="score-grid">
+              <label>Your legs<input name="playerOneScore" type="number" min="0" max="20" required></label>
+              <label>Opponent legs<input name="playerTwoScore" type="number" min="0" max="20" required></label>
+            </div>
+            <div class="score-grid">
+              <label>Your average<input name="playerOneAverage" type="number" min="0" max="150" step="0.01"></label>
+              <label>Opponent average<input name="playerTwoAverage" type="number" min="0" max="150" step="0.01"></label>
+            </div>
+            <div class="score-grid">
+              <label>Your 180s<input name="playerOne180s" type="number" min="0" max="50" value="0"></label>
+              <label>Opponent 180s<input name="playerTwo180s" type="number" min="0" max="50" value="0"></label>
+            </div>
+            <label>Result screenshot<input name="resultImage" type="file" accept="image/*" required></label>
+            <button class="primary-button" type="submit">Submit For Approval</button>
+          </form>
+        </section>
+
+        <section class="panel section-view" data-section="admin" hidden>
+          <div class="panel-heading">
+            <div><p class="eyebrow">Admin</p><h2>League Control Centre</h2></div>
+          </div>
+          <div class="division-table-list">
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Pending Result Approvals</h3></div></div>
+              <div id="adminPendingResults" class="fixture-list"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Season Management</h3></div></div>
+              <form id="seasonForm" class="stack-form">
+                <input type="hidden" name="seasonId">
+                <label>Season name<input name="seasonName" type="text" required></label>
+                <div class="score-grid">
+                  <label>Start date<input name="seasonStart" type="date" required></label>
+                  <label>End date<input name="seasonEnd" type="date" required></label>
+                </div>
+                <label>Status<select name="seasonStatus"><option value="active">Active</option><option value="archived">Archived</option></select></label>
+                <button class="primary-button" type="submit">Save Season</button>
+              </form>
+              <div id="seasonCards" class="fixture-list section-gap"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Teams</h3></div></div>
+              <form id="teamForm" class="stack-form">
+                <input type="hidden" name="teamId">
+                <label>Team name<input name="teamName" type="text" required></label>
+                <button class="primary-button" type="submit">Save Team</button>
+              </form>
+              <div id="teamCards" class="fixture-list section-gap"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Players</h3></div></div>
+              <form id="adminPlayerForm" class="stack-form">
+                <input type="hidden" name="playerId">
+                <label>Username<input name="playerUsername" type="text" required></label>
+                <label>Email<input name="playerEmail" type="email" required></label>
+                <label>Password<input name="playerPassword" type="text"></label>
+                <label>3-dart average<input name="playerAverage" type="number" min="0" max="150" step="0.01" required></label>
+                <label>Team<select name="playerTeamId"><option value="">No team</option></select></label>
+                <label>DartCounter link<input name="playerDartCounterLink" type="url"></label>
+                <label>Bio<textarea name="playerBio" rows="4"></textarea></label>
+                <label class="checkbox-row"><input name="playerIsAdmin" type="checkbox"> Admin account</label>
+                <button class="primary-button" type="submit">Save Player</button>
+              </form>
+              <div id="adminPlayerCards" class="fixture-list section-gap"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Fixtures</h3></div></div>
+              <form id="fixtureForm" class="stack-form">
+                <input type="hidden" name="adminFixtureId">
+                <label>Player one<select name="fixturePlayerOneId" required></select></label>
+                <label>Player two<select name="fixturePlayerTwoId" required></select></label>
+                <label>Scheduled date<input name="fixtureScheduledDate" type="date" required></label>
+                <label>Notes<textarea name="fixtureNotes" rows="3"></textarea></label>
+                <button class="primary-button" type="submit">Save Fixture</button>
+              </form>
+              <div id="adminFixtureCards" class="fixture-list section-gap"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Import / Export</h3></div></div>
+              <div class="stack-form">
+                <button class="ghost-button" id="exportButton" type="button">Export Data</button>
+                <label>Import JSON<textarea id="importData" rows="8" placeholder="Paste exported league JSON here"></textarea></label>
+                <button class="primary-button" id="importButton" type="button">Import Data</button>
+              </div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Announcements</h3></div></div>
+              <form id="announcementForm" class="stack-form">
+                <input type="hidden" name="announcementId">
+                <label>Title<input name="announcementTitle" type="text" required></label>
+                <label>Message<textarea name="announcementBody" rows="5" required></textarea></label>
+                <button class="primary-button" type="submit">Publish Announcement</button>
+              </form>
+              <div id="adminAnnouncementCards" class="fixture-list section-gap"></div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Payments</h3></div></div>
+              <div id="adminPaymentCards" class="fixture-list"></div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <aside id="profileDrawer" class="profile-drawer" hidden>
+        <div class="panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">My Profile</p><h2>Player Card</h2></div>
+            <button class="ghost-button" id="closeProfileButton" type="button">Close</button>
+          </div>
+          <div id="profileCard" class="division-table-card"></div>
+          <form id="profileForm" class="stack-form section-gap">
+            <label>Username<input name="profileUsername" type="text" maxlength="30" required></label>
+            <label>3-dart average<input name="profileThreeDartAverage" type="number" step="0.01" min="0" max="150"></label>
+            <label>DartCounter link<input name="profileDartCounterLink" type="url"></label>
+            <label>Bio<textarea name="profileBio" rows="6"></textarea></label>
+            <button class="primary-button" type="submit">Save Profile</button>
+          </form>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <nav class="mobile-bottom-nav panel" aria-label="Primary">
+    <button class="mobile-nav-button is-active" type="button" data-view="overview">Home</button>
+    <button class="mobile-nav-button" type="button" data-view="payment">Subscription</button>
+    <button class="mobile-nav-button" type="button" data-view="results">Results</button>
+    <button class="mobile-nav-button" type="button" data-view="tables">Table</button>
+    <button class="mobile-nav-button" type="button" data-view="profiles">Players</button>
+  </nav>
+  <script src="dashboard-app.js"></script>
+</body>
+</html>

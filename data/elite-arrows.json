@@ -1,0 +1,152 @@
+{
+  "divisions": [
+    {
+      "id": "elite",
+      "name": "Elite"
+    },
+    {
+      "id": "premier",
+      "name": "Premier"
+    },
+    {
+      "id": "champion",
+      "name": "Champion"
+    },
+    {
+      "id": "diamond",
+      "name": "Diamond"
+    },
+    {
+      "id": "gold",
+      "name": "Gold"
+    }
+  ],
+  "currentSeasonId": "season-2026",
+  "seasons": [
+    {
+      "id": "season-2026",
+      "name": "2026 Season",
+      "startDate": "2026-05-15",
+      "endDate": "2026-06-16",
+      "status": "active",
+      "archivedAt": ""
+    }
+  ],
+  "teams": [],
+  "fixtures": [],
+  "paymentOptions": {
+    "bankTransfer": {
+      "accountName": "Rhys Howe",
+      "sortCode": "60-09-09",
+      "accountNumber": "80249442",
+      "referenceHint": "elite arrows payment"
+    },
+    "paypal": {
+      "email": "@Rhyshowe834",
+      "link": ""
+    },
+    "feeLabel": "League Access Fee",
+    "feeAmount": "5.00"
+  },
+  "announcements": [],
+  "chats": [
+    {
+      "id": "announcements",
+      "name": "Announcements",
+      "type": "announcement",
+      "divisionId": "",
+      "participantIds": [],
+      "messages": [
+        {
+          "id": "6d213779-c1fb-4ff1-9c71-1654fdf955e5",
+          "authorId": "550c8327-31e0-47ba-9e5f-54f15a05a283",
+          "body": "hello",
+          "createdAt": "2026-04-09T02:34:39.798Z",
+          "editedAt": "",
+          "replyToId": "",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "main",
+      "name": "Main Group Chat",
+      "type": "group",
+      "divisionId": "",
+      "participantIds": [],
+      "messages": [
+        {
+          "id": "b1b083bb-f0e2-4a5d-9db5-57919fdb35f3",
+          "authorId": "550c8327-31e0-47ba-9e5f-54f15a05a283",
+          "body": "hello",
+          "createdAt": "2026-04-09T02:47:12.746Z",
+          "editedAt": "",
+          "replyToId": "",
+          "attachments": []
+        }
+      ]
+    },
+    {
+      "id": "division-elite",
+      "name": "Elite Division",
+      "type": "division",
+      "divisionId": "elite",
+      "participantIds": [],
+      "messages": []
+    },
+    {
+      "id": "division-premier",
+      "name": "Premier Division",
+      "type": "division",
+      "divisionId": "premier",
+      "participantIds": [],
+      "messages": []
+    },
+    {
+      "id": "division-champion",
+      "name": "Champion Division",
+      "type": "division",
+      "divisionId": "champion",
+      "participantIds": [],
+      "messages": []
+    },
+    {
+      "id": "division-diamond",
+      "name": "Diamond Division",
+      "type": "division",
+      "divisionId": "diamond",
+      "participantIds": [],
+      "messages": []
+    },
+    {
+      "id": "division-gold",
+      "name": "Gold Division",
+      "type": "division",
+      "divisionId": "gold",
+      "participantIds": [],
+      "messages": []
+    }
+  ],
+  "players": [
+    {
+      "id": "550c8327-31e0-47ba-9e5f-54f15a05a283",
+      "username": "Rhyshowe",
+      "email": "rhyshowe2023@outlook.com",
+      "password": "Kelly.2026",
+      "divisionId": "gold",
+      "bio": "",
+      "dartCounterLink": "https://dartcounter.app/profile/14758086",
+      "threeDartAverage": 43,
+      "isAdmin": true,
+      "teamId": "",
+      "paymentStatus": "paid",
+      "paymentMethod": "",
+      "paymentReference": "",
+      "paymentSubmittedAt": "",
+      "paymentApprovedAt": "",
+      "paymentProofData": "",
+      "paymentProofName": ""
+    }
+  ],
+  "matches": []
+}

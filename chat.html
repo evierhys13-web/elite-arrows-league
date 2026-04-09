@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Arrows Chat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-page chat-page">
+  <div class="page-shell page-shell-wide">
+    <section class="chat-shell">
+      <aside class="chat-sidebar panel">
+        <div>
+          <p class="eyebrow">Elite Arrows</p>
+          <h2>Player Chat</h2>
+          <p class="hero-copy">Arrange matches, talk with your division, and keep up with league announcements.</p>
+        </div>
+        <a class="ghost-button button-link" href="/dashboard.html">Back To Dashboard</a>
+        <div class="chat-room-list" id="chatRoomList"></div>
+      </aside>
+
+      <main class="chat-main panel">
+        <header class="panel-heading">
+          <div>
+            <p class="eyebrow">Chat Room</p>
+            <h2 id="chatRoomTitle">Main Group Chat</h2>
+          </div>
+          <div class="hero-copy" id="chatRoomMeta"></div>
+        </header>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div id="replyBanner" class="team-chip" hidden>
+          <div>
+            <h3 id="replyLabel">Replying</h3>
+            <p id="replyPreview"></p>
+          </div>
+          <button class="ghost-button" id="clearReplyButton" type="button">Cancel</button>
+        </div>
+        <form id="chatForm" class="stack-form">
+          <div class="topbar-actions">
+            <button class="ghost-button emoji-button" type="button" data-emoji="😀">😀</button>
+            <button class="ghost-button emoji-button" type="button" data-emoji="🎯">🎯</button>
+            <button class="ghost-button emoji-button" type="button" data-emoji="🔥">🔥</button>
+            <button class="ghost-button emoji-button" type="button" data-emoji="👏">👏</button>
+            <button class="ghost-button" id="recordAudioButton" type="button">Record Voice</button>
+          </div>
+          <label>Message<textarea name="message" rows="4" placeholder="Write your message..."></textarea></label>
+          <label>Photos / videos / audio<input id="chatAttachments" name="chatAttachments" type="file" accept="image/*,video/*,audio/*" multiple></label>
+          <div id="attachmentPreview" class="chat-room-list"></div>
+          <button class="primary-button" type="submit">Send Message</button>
+        </form>
+      </main>
+    </section>
+  </div>
+  <script src="chat-app.js"></script>
+</body>
+</html>

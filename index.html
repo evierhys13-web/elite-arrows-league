@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elite Arrows Welcome</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="welcome-page">
+  <div class="page-shell page-shell-wide">
+    <section class="welcome-shell">
+      <div class="welcome-copy">
+        <p class="eyebrow">Elite Arrows</p>
+        <h1>Welcome To Elite Arrows</h1>
+        <p class="hero-copy">
+          Sign up as a player or admin, choose whether to be remembered on this device,
+          and head straight into the main league app.
+        </p>
+        <div class="hero-metrics" id="heroMetrics"></div>
+      </div>
+
+      <div class="welcome-auth panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Welcome Site</p>
+            <h2>Sign Up Or Sign In</h2>
+          </div>
+        </div>
+        <p id="authMessage" class="hero-copy"></p>
+        <div class="auth-grid auth-grid-separate">
+          <form id="signupForm" class="stack-form auth-panel is-active">
+            <h3>Create Account</h3>
+            <label>Username<input name="username" type="text" maxlength="30" required></label>
+            <label>Email<input name="email" type="email" required></label>
+            <label>Password<input name="password" type="password" required></label>
+            <label>3-dart average<input name="threeDartAverage" type="number" step="0.01" min="0" max="150" required></label>
+            <label>DartCounter link<input name="dartCounterLink" type="url" placeholder="https://www.dartcounter.net/..."></label>
+            <label>Bio<textarea name="bio" rows="5" placeholder="Write a short player bio similar to DartCounter."></textarea></label>
+            <label class="checkbox-row"><input name="rememberMe" type="checkbox" checked> Remember me on this device</label>
+            <label class="checkbox-row checkbox-row-admin"><input name="isAdmin" type="checkbox"> Sign up as admin</label>
+            <button class="primary-button" type="submit">Continue</button>
+          </form>
+
+          <form id="loginForm" class="stack-form auth-panel is-active">
+            <h3>Sign In</h3>
+            <label>Email<input name="loginEmail" type="email" required></label>
+            <label>Password<input name="loginPassword" type="password" required></label>
+            <label class="checkbox-row"><input name="rememberMe" type="checkbox" checked> Remember me on this device</label>
+            <button class="primary-button" type="submit">Continue</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="welcome-app.js"></script>
+</body>
+</html>
