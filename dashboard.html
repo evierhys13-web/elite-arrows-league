@@ -6,7 +6,7 @@
   <title>Elite Arrows Dashboard</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#1a2b3d">
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body class="dashboard-page">
   <div class="page-shell page-shell-wide">
@@ -35,9 +35,9 @@
       </aside>
 
       <main class="app-main">
-        <section class="profile-hero panel" id="profileHeader">
-          <div class="profile-hero-content">
-            <div class="profile-main-card">
+        <section class="profile-section" id="profileHeader">
+          <div class="profile-card panel">
+            <div class="profile-card-inner">
               <div class="profile-avatar-wrap">
                 <div class="profile-avatar-large" id="profileAvatar">
                   <img id="profileAvatarImg" src="" alt="Profile Picture">
@@ -51,15 +51,14 @@
                 </label>
                 <input type="file" id="profilePictureInput" accept="image/*" hidden>
               </div>
-              <div class="profile-details">
+              <div class="profile-info">
                 <h1 id="profileHeaderName"></h1>
                 <p id="profileHeaderDivision" class="profile-division"></p>
-                <div class="profile-actions">
-                  <button class="ghost-button" id="openProfileButton" type="button">Edit Profile</button>
-                </div>
               </div>
             </div>
-            <div class="profile-stats-grid" id="profileQuickStats">
+            <div class="profile-stats-grid" id="profileQuickStats"></div>
+            <div class="profile-actions">
+              <button class="primary-button" id="openProfileButton" type="button">Edit Profile</button>
             </div>
           </div>
         </section>
@@ -71,7 +70,7 @@
           <div class="hero-metrics" id="seasonMetrics"></div>
           <div class="section-gap">
             <div class="panel-heading">
-              <div><p class="eyebrow">Overview</p><h2>Your Stats</h2></div>
+              <div><p class="eyebrow">Overview</p><h2>Quick Stats</h2></div>
             </div>
             <div class="hero-metrics" id="overviewMetrics"></div>
           </div>
@@ -323,6 +322,6 @@
     <button class="mobile-nav-button" type="button" data-view="tables">Table</button>
     <button class="mobile-nav-button" type="button" data-view="profiles">Players</button>
   </nav>
-  <script src="dashboard-app.js?v=8"></script>
+  <script src="dashboard-app.js?v=9"></script>
 </body>
 </html>

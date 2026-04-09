@@ -36,10 +36,30 @@ html, body {
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
   background-color: #1a2b3d !important;
   background: #1a2b3d !important;
+  position: relative;
 }
 
 body.theme-light {
-  background: #f2e6d5 !important;
+  background-color: #e8f4fc !important;
+  background: #e8f4fc !important;
+  --surface: rgba(255, 255, 255, 0.9);
+  --surface-strong: rgba(255, 255, 255, 0.95);
+  --text: #1a3a5c;
+  --muted: #5a8ab8;
+  --line: rgba(26, 58, 92, 0.1);
+  --brand: #4da6ff;
+  --brand-dark: #3d8ae0;
+  --brand-gradient: linear-gradient(135deg, #4da6ff, #66c2ff);
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.1);
+}
+
+body.theme-light::before {
+  display: none;
+}
+
+body.theme-light .panel {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(77, 166, 255, 0.2);
 }
 
 body.welcome-page {
@@ -338,6 +358,8 @@ body > * {
   gap: 0;
   align-items: stretch;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 .chat-shell {
@@ -479,16 +501,19 @@ body > * {
 }
 
 .dashboard-page.theme-light {
-  --surface: rgba(247, 241, 234, 0.92);
-  --surface-strong: rgba(255, 252, 247, 0.98);
-  --text: #26170e;
-  --muted: #715948;
-  --line: rgba(76, 49, 27, 0.12);
-  --shadow: 0 18px 55px rgba(79, 48, 25, 0.14);
-  background:
-    linear-gradient(160deg, #f2e6d5, #f8f3e9 45%, #eee3cf),
-    radial-gradient(circle at 12% 18%, rgba(195, 37, 37, 0.12), transparent 18%),
-    radial-gradient(circle at 82% 22%, rgba(24, 127, 92, 0.1), transparent 20%);
+  background-color: #e8f4fc !important;
+  background: #e8f4fc !important;
+}
+
+.theme-light .app-sidebar {
+  background: rgba(200, 230, 248, 0.95) !important;
+  border-right-color: rgba(77, 166, 255, 0.3) !important;
+}
+
+.theme-light .app-sidebar .eyebrow,
+.theme-light .app-sidebar h2,
+.theme-light .nav-button {
+  color: #1a3a5c !important;
 }
 
 .app-sidebar {
@@ -511,9 +536,7 @@ body > * {
 }
 
 .theme-light .app-sidebar {
-  background:
-    linear-gradient(180deg, rgba(255, 249, 241, 0.98), rgba(244, 232, 214, 0.94)),
-    radial-gradient(circle at top right, rgba(193, 31, 31, 0.08), transparent 36%);
+  background: rgba(200, 230, 248, 0.95) !important;
 }
 
 .sidebar-nav,
@@ -1013,21 +1036,24 @@ tbody tr:nth-child(1) {
   }
 }
 
-.profile-hero {
-  padding: 2.5rem 2rem;
+.profile-section {
+  display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
 }
 
-.profile-hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+.profile-card {
+  width: 100%;
+  max-width: 700px;
+  padding: 2rem;
+  text-align: center;
 }
 
-.profile-main-card {
+.profile-card-inner {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--line);
 }
@@ -1039,8 +1065,8 @@ tbody tr:nth-child(1) {
 
 .profile-avatar-large {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   overflow: hidden;
   background: var(--brand);
@@ -1057,7 +1083,7 @@ tbody tr:nth-child(1) {
 }
 
 .avatar-initial {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: white;
   text-transform: uppercase;
@@ -1070,8 +1096,8 @@ tbody tr:nth-child(1) {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--brand);
   color: white;
@@ -1087,64 +1113,56 @@ tbody tr:nth-child(1) {
   transform: scale(1.1);
 }
 
-.profile-details {
+.profile-info {
   flex: 1;
+  text-align: left;
 }
 
-.profile-details h1 {
+.profile-info h1 {
   margin: 0 0 0.25rem 0;
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
 }
 
 .profile-division {
   color: var(--brand);
-  margin: 0 0 1rem 0;
+  margin: 0;
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   letter-spacing: 0.05em;
 }
 
 .profile-actions {
-  display: flex;
-  gap: 0.75rem;
+  margin-top: 1rem;
 }
 
 .profile-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
 }
 
 .profile-stat-card {
-  background: var(--surface);
-  border-radius: 16px;
-  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
   text-align: center;
-  border: 1px solid var(--line);
 }
 
 .profile-stat-card .stat-value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--brand);
   line-height: 1;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .profile-stat-card .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.profile-stat-card .stat-sublabel {
-  font-size: 0.7rem;
-  color: var(--muted);
-  opacity: 0.7;
-  margin-top: 0.25rem;
+  letter-spacing: 0.03em;
 }
 
 .profile-edit-section {
@@ -1166,6 +1184,25 @@ tbody tr:nth-child(1) {
 
 .upload-picture-btn:hover {
   background: var(--surface);
+}
+
+@media (max-width: 640px) {
+  .profile-card-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-info {
+    text-align: center;
+  }
+  
+  .profile-info h1 {
+    font-size: 1.5rem;
+  }
+  
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 640px) {
