@@ -1,16 +1,22 @@
 :root {
-  --bg: var(--custom-bg, #1a2b3d);
-  --bg-accent: var(--custom-bg-accent, #243447);
-  --surface: var(--custom-surface, rgba(26, 43, 61, 0.88));
-  --surface-strong: var(--custom-surface-strong, rgba(36, 52, 71, 0.95));
-  --text: var(--custom-text, #e8f0f6);
-  --muted: var(--custom-muted, #8fa4b8);
-  --line: var(--custom-line, rgba(136, 164, 196, 0.15));
-  --brand: var(--custom-brand, #4da6ff);
-  --brand-dark: var(--custom-brand-dark, #3d8ae0);
-  --brand-gradient: var(--custom-brand-gradient, linear-gradient(135deg, #4da6ff, #66c2ff));
+  --bg: #1a2b3d;
+  --bg-accent: #243447;
+  --surface: rgba(26, 43, 61, 0.88);
+  --surface-strong: rgba(36, 52, 71, 0.95);
+  --text: #e8f0f6;
+  --muted: #8fa4b8;
+  --line: rgba(136, 164, 196, 0.15);
+  --brand: #4da6ff;
+  --brand-dark: #3d8ae0;
+  --brand-gradient: linear-gradient(135deg, #4da6ff, #66c2ff);
   --success: #3a9d6e;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+}
+
+:root {
+  --custom-bg: #1a2b3d;
+  --custom-bg-accent: #243447;
+  --custom-brand: #4da6ff;
 }
 
 * {
