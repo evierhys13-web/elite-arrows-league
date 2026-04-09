@@ -11,6 +11,7 @@ let state = {
   chats: [],
   players: [],
   matches: [],
+  siteSettings: {},
   currentSeasonId: "",
   sessionUserId: getStoredSessionId()
 };
@@ -70,6 +71,7 @@ const adminPaymentCards = document.querySelector("#adminPaymentCards");
 const exportButton = document.querySelector("#exportButton");
 const importButton = document.querySelector("#importButton");
 const importData = document.querySelector("#importData");
+const siteSettingsForm = document.querySelector("#siteSettingsForm");
 const sectionOrder = ["overview", "payment", "results", "tables", "profiles", "submit", "admin"];
 
 navButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
@@ -91,6 +93,7 @@ fixtureForm.addEventListener("submit", saveFixture);
 announcementForm.addEventListener("submit", saveAnnouncement);
 exportButton.addEventListener("click", exportData);
 importButton.addEventListener("click", importLeagueData);
+siteSettingsForm.addEventListener("submit", saveSiteSettings);
 openSubscriptionButton.addEventListener("click", () => setActiveSection("payment"));
 
 document.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -389,6 +392,8 @@ function renderAdmin() {
   seasonForm.elements.seasonStatus.value = currentSeason()?.status ?? "active";
   seasonForm.elements.seasonId.value = currentSeason()?.id ?? "";
   announcementForm.elements.announcementId.value = "";
+  
+  applySiteColors();
 
   adminPendingResults.innerHTML = "";
   const pending = pendingMatches();
@@ -642,6 +647,18 @@ async function importLeagueData() {
   } catch {
     window.alert("Paste valid JSON before importing.");
   }
+}
+
+async function saveSiteSettings(event) {
+  event.preventDefault();
+  const formData = new FormData(siteSettingsForm);
+  await adminSend("/api/admin/site-settings", {
+    backgroundColor: formData.get("backgroundColor"),
+    accentColor: formData.get("accentColor"),
+    buttonColor: formData.get("buttonColor")
+  });
+  applySiteColors();
+  window.alert("Site colors updated successfully!");
 }
 
 async function send(url, payload) {
@@ -944,6 +961,32 @@ function applyTheme(theme) {
   const label = theme === "light" ? "Dark Mode" : "Light Mode";
   themeToggleButton.textContent = label;
   topbarThemeToggleButton.textContent = label;
+}
+
+function applySiteColors() {
+  const settings = state.siteSettings || {};
+  const bg = settings.backgroundColor || "#0d1a28";
+  const accent = settings.accentColor || "#4da6ff";
+  const button = settings.buttonColor || "#4da6ff";
+  
+  document.documentElement.style.setProperty("--custom-bg", bg);
+  document.documentElement.style.setProperty("--custom-accent", accent);
+  document.documentElement.style.setProperty("--custom-brand", button);
+  document.documentElement.style.setProperty("--custom-brand-dark", adjustBrightness(button, -20));
+  document.documentElement.style.setProperty("--custom-brand-gradient", `linear-gradient(135deg, ${button}, ${adjustBrightness(button, 20)})`);
+  
+  siteSettingsForm.elements.backgroundColor.value = bg;
+  siteSettingsForm.elements.accentColor.value = accent;
+  siteSettingsForm.elements.buttonColor.value = button;
+}
+
+function adjustBrightness(hex, percent) {
+  const num = parseInt(hex.replace("#", ""), 16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.min(255, Math.max(0, (num >> 16) + amt));
+  const G = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amt));
+  const B = Math.min(255, Math.max(0, (num & 0x0000FF) + amt));
+  return "#" + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
 }
 
 async function promptInstall() {

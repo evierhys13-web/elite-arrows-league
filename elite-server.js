@@ -578,6 +578,21 @@ async function handleApi(request, response, url) {
     return sendJson(response, 200, withSession(imported, admin.id));
   }
 
+  if (request.method === "POST" && url.pathname === "/api/admin/site-settings") {
+    const admin = requireAdmin(state, sessionUserId);
+    if (!admin) return sendJson(response, 403, { error: "Admin access required." });
+
+    const settings = {
+      backgroundColor: typeof payload.backgroundColor === "string" ? payload.backgroundColor : "#0d1a28",
+      accentColor: typeof payload.accentColor === "string" ? payload.accentColor : "#4da6ff",
+      buttonColor: typeof payload.buttonColor === "string" ? payload.buttonColor : "#4da6ff"
+    };
+
+    state.siteSettings = settings;
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, admin.id));
+  }
+
   return sendJson(response, 404, { error: "Not found" });
 }
 
@@ -819,6 +834,16 @@ async function ensureState() {
 }
 
 function normalizeState(raw) {
+  const siteSettings = raw?.siteSettings ? {
+    backgroundColor: raw.siteSettings.backgroundColor || "#0d1a28",
+    accentColor: raw.siteSettings.accentColor || "#4da6ff",
+    buttonColor: raw.siteSettings.buttonColor || "#4da6ff"
+  } : {
+    backgroundColor: "#0d1a28",
+    accentColor: "#4da6ff",
+    buttonColor: "#4da6ff"
+  };
+
   const seasons = Array.isArray(raw?.seasons) && raw.seasons.length
     ? raw.seasons.map((season) => ({
         id: season.id || randomUUID(),
@@ -846,6 +871,7 @@ function normalizeState(raw) {
     divisions: DIVISIONS,
     currentSeasonId,
     seasons,
+    siteSettings,
     teams: Array.isArray(raw?.teams) ? raw.teams.map((team) => ({
       id: team.id || randomUUID(),
       name: team.name || "Team"
@@ -977,6 +1003,7 @@ function serializeState(state) {
     divisions: DIVISIONS,
     currentSeasonId: state.currentSeasonId,
     seasons: state.seasons,
+    siteSettings: state.siteSettings,
     teams: state.teams,
     fixtures: state.fixtures,
     paymentOptions: state.paymentOptions,

@@ -12,6 +12,9 @@
   <div class="page-shell page-shell-wide">
     <section class="app-shell">
       <aside class="app-sidebar panel">
+        <div class="sidebar-logo">
+          <img src="EliteArrows logo.jpg" alt="Elite Arrows Logo">
+        </div>
         <div>
           <p class="eyebrow">Elite Arrows</p>
           <h2>Dashboard</h2>
@@ -239,6 +242,15 @@
                 <label>Import JSON<textarea id="importData" rows="8" placeholder="Paste exported league JSON here"></textarea></label>
                 <button class="primary-button" id="importButton" type="button">Import Data</button>
               </div>
+            </article>
+            <article class="division-table-card">
+              <div class="panel-heading"><div><h3>Site Customization</h3></div></div>
+              <form id="siteSettingsForm" class="stack-form">
+                <label>Background Color<input name="backgroundColor" type="color" value="#0d1a28"></label>
+                <label>Accent Color<input name="accentColor" type="color" value="#4da6ff"></label>
+                <label>Button Color<input name="buttonColor" type="color" value="#4da6ff"></label>
+                <button class="primary-button" type="submit">Save Colors</button>
+              </form>
             </article>
             <article class="division-table-card">
               <div class="panel-heading"><div><h3>Announcements</h3></div></div>
