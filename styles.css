@@ -46,7 +46,7 @@ body.theme-light {
   --surface-strong: rgba(255, 255, 255, 0.95);
   --text: #1a3a5c;
   --muted: #5a8ab8;
-  --line: rgba(26, 58, 92, 0.1);
+  --line: rgba(26, 58, 92, 0.15);
   --brand: #4da6ff;
   --brand-dark: #3d8ae0;
   --brand-gradient: linear-gradient(135deg, #4da6ff, #66c2ff);
@@ -60,6 +60,11 @@ body.theme-light::before {
 body.theme-light .panel {
   background: rgba(255, 255, 255, 0.9) !important;
   border-color: rgba(77, 166, 255, 0.2);
+}
+
+body.theme-light .site-header {
+  background: #ffffff;
+  border-bottom-color: #e5e5e5;
 }
 
 body.welcome-page {
@@ -574,40 +579,28 @@ body > * {
 .site-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-  margin-bottom: 0.5rem;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1rem;
 }
 
-.header-logo {
+.site-header .header-logo {
   flex-shrink: 0;
 }
 
-.header-logo img {
-  width: 50px;
-  height: 50px;
+.site-header .header-logo img {
+  width: 48px;
+  height: 48px;
   object-fit: contain;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
-.header-title {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-
-.header-brand {
-  font-size: 1.4rem;
+.site-header .header-brand {
+  font-size: 1.5rem;
   font-weight: 700;
+  margin: 0;
   color: var(--text);
-  line-height: 1.1;
-}
-
-.header-tagline {
-  font-size: 0.75rem;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .hero-metrics-inline {
