@@ -324,6 +324,7 @@ async function handleApi(request, response, url) {
     currentUser.bio = payload.bio?.trim() ?? currentUser.bio;
     currentUser.dartCounterLink = payload.dartCounterLink?.trim() ?? currentUser.dartCounterLink;
     currentUser.threeDartAverage = parseOptionalNumber(payload.threeDartAverage);
+    currentUser.profilePicture = typeof payload.profilePicture === "string" ? payload.profilePicture : currentUser.profilePicture || "";
     if (currentUser.threeDartAverage !== null) currentUser.divisionId = divisionForAverage(currentUser.threeDartAverage);
 
     await writeState(state);
@@ -778,7 +779,7 @@ function canAccessRoom(state, user, roomId) {
   return room.type !== "announcement";
 }
 
-function createPlayer({ username, email, password, divisionId, bio, dartCounterLink, threeDartAverage, isAdmin, adminRequestPending, teamId }) {
+function createPlayer({ username, email, password, divisionId, bio, dartCounterLink, threeDartAverage, isAdmin, adminRequestPending, teamId, profilePicture }) {
   return {
     id: randomUUID(),
     username,
@@ -797,7 +798,8 @@ function createPlayer({ username, email, password, divisionId, bio, dartCounterL
     paymentSubmittedAt: "",
     paymentApprovedAt: "",
     paymentProofData: "",
-    paymentProofName: ""
+    paymentProofName: "",
+    profilePicture: profilePicture || ""
   };
 }
 
@@ -929,7 +931,8 @@ function normalizeState(raw) {
       paymentSubmittedAt: player.paymentSubmittedAt ?? "",
       paymentApprovedAt: player.paymentApprovedAt ?? "",
       paymentProofData: player.paymentProofData ?? "",
-      paymentProofName: player.paymentProofName ?? ""
+      paymentProofName: player.paymentProofName ?? "",
+      profilePicture: player.profilePicture ?? ""
     })) : [],
     announcements: Array.isArray(raw?.announcements) ? raw.announcements.map((announcement) => ({
       id: announcement.id || randomUUID(),
@@ -1012,7 +1015,8 @@ function sanitizeState(state) {
       paymentSubmittedAt: player.paymentSubmittedAt,
       paymentApprovedAt: player.paymentApprovedAt,
       paymentProofData: player.paymentProofData,
-      paymentProofName: player.paymentProofName
+      paymentProofName: player.paymentProofName,
+      profilePicture: player.profilePicture || ""
     })),
     paymentOptions: state.paymentOptions,
     announcements: state.announcements,

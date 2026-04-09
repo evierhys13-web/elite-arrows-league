@@ -16,6 +16,8 @@ let state = {
   sessionUserId: getStoredSessionId()
 };
 
+let currentProfilePicture = "";
+
 let activeSection = "overview";
 let deferredInstallPrompt = null;
 let touchStartX = 0;
@@ -72,6 +74,12 @@ const exportButton = document.querySelector("#exportButton");
 const importButton = document.querySelector("#importButton");
 const importData = document.querySelector("#importData");
 const siteSettingsForm = document.querySelector("#siteSettingsForm");
+const profilePictureInput = document.querySelector("#profilePictureInput");
+const profilePictureEditInput = document.querySelector("#profilePictureEditInput");
+const profileAvatarImg = document.querySelector("#profileAvatarImg");
+const profileAvatarInitial = document.querySelector("#profileAvatarInitial");
+const profileEditAvatarImg = document.querySelector("#profileEditAvatarImg");
+const profileEditAvatarInitial = document.querySelector("#profileEditAvatarInitial");
 const sectionOrder = ["overview", "payment", "results", "tables", "profiles", "submit", "admin"];
 
 navButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
@@ -95,6 +103,8 @@ exportButton.addEventListener("click", exportData);
 importButton.addEventListener("click", importLeagueData);
 siteSettingsForm.addEventListener("submit", saveSiteSettings);
 document.querySelector("#resetSiteColorsButton")?.addEventListener("click", resetSiteColors);
+profilePictureInput?.addEventListener("change", handleProfilePictureUpload);
+profilePictureEditInput?.addEventListener("change", handleProfilePictureUpload);
 openSubscriptionButton.addEventListener("click", () => setActiveSection("payment"));
 
 document.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -271,17 +281,115 @@ function renderAnnouncements() {
 
 function renderProfile() {
   const user = currentUser();
-  profileCard.innerHTML = `
-    <h3>${user.username}</h3>
-    <p>${getDivisionName(user.divisionId)}</p>
-    <p>${user.bio || "No bio written yet."}</p>
-    <p>3-dart average: ${formatAverage(user.threeDartAverage)}</p>
-    ${user.dartCounterLink ? `<p>DartCounter: <a href="${user.dartCounterLink}" target="_blank" rel="noreferrer">${user.dartCounterLink}</a></p>` : ""}
-  `;
+  currentProfilePicture = user.profilePicture || "";
+  updateProfileAvatars();
+  
+  const profileStats = calculatePlayerStatsForUser(user.id);
+  const profileHeaderName = document.querySelector("#profileHeaderName");
+  const profileHeaderDivision = document.querySelector("#profileHeaderDivision");
+  const profileQuickStats = document.querySelector("#profileQuickStats");
+  
+  if (profileHeaderName) profileHeaderName.textContent = user.username;
+  if (profileHeaderDivision) profileHeaderDivision.textContent = getDivisionName(user.divisionId);
+  if (profileQuickStats) {
+    profileQuickStats.innerHTML = `
+      <div class="stat-item">
+        <div class="stat-value">${profileStats.wins}</div>
+        <div class="stat-label">Wins</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">${profileStats.played}</div>
+        <div class="stat-label">Played</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">${formatAverage(profileStats.average)}</div>
+        <div class="stat-label">Avg</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">${profileStats.avg}</div>
+        <div class="stat-label">3-Dart Avg</div>
+      </div>
+    `;
+  }
+  
   profileForm.elements.profileUsername.value = user.username;
   profileForm.elements.profileThreeDartAverage.value = user.threeDartAverage ?? "";
   profileForm.elements.profileDartCounterLink.value = user.dartCounterLink ?? "";
   profileForm.elements.profileBio.value = user.bio ?? "";
+}
+
+function updateProfileAvatars() {
+  const img = currentProfilePicture;
+  const initial = currentUser()?.username?.charAt(0).toUpperCase() || "?";
+  
+  if (profileAvatarImg) {
+    if (img) {
+      profileAvatarImg.src = img;
+      profileAvatarImg.style.display = "block";
+      profileAvatarInitial.style.display = "none";
+    } else {
+      profileAvatarImg.style.display = "none";
+      profileAvatarInitial.textContent = initial;
+      profileAvatarInitial.style.display = "flex";
+    }
+  }
+  
+  if (profileEditAvatarImg) {
+    if (img) {
+      profileEditAvatarImg.src = img;
+      profileEditAvatarImg.style.display = "block";
+      profileEditAvatarInitial.style.display = "none";
+    } else {
+      profileEditAvatarImg.style.display = "none";
+      profileEditAvatarInitial.textContent = initial;
+      profileEditAvatarInitial.style.display = "flex";
+    }
+  }
+}
+
+function calculatePlayerStatsForUser(playerId) {
+  const matches = approvedMatches().filter(m => m.playerOneId === playerId || m.playerTwoId === playerId);
+  const userMatches = matches.filter(m => m.playerOneId === playerId || m.playerTwoId === playerId);
+  let wins = 0, played = 0;
+  
+  userMatches.forEach(match => {
+    played++;
+    if (match.playerOneId === playerId && match.playerOneScore > match.playerTwoScore) wins++;
+    if (match.playerTwoId === playerId && match.playerTwoScore > match.playerOneScore) wins++;
+  });
+  
+  const user = currentUser();
+  return {
+    wins,
+    played,
+    average: played > 0 ? ((userMatches.reduce((sum, m) => {
+      if (m.playerOneId === playerId) return sum + (m.playerOneAverage || 0);
+      return sum + (m.playerTwoAverage || 0);
+    }, 0)) / played).toFixed(1) : "-",
+    avg: formatAverage(user?.threeDartAverage)
+  };
+}
+
+async function handleProfilePictureUpload(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target?.result;
+    if (typeof dataUrl === "string") {
+      currentProfilePicture = dataUrl;
+      updateProfileAvatars();
+      await send("/api/profile", {
+        username: currentUser()?.username,
+        threeDartAverage: currentUser()?.threeDartAverage,
+        dartCounterLink: currentUser()?.dartCounterLink,
+        bio: currentUser()?.bio,
+        profilePicture: dataUrl
+      });
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function renderOpponentOptions() {
@@ -549,7 +657,8 @@ async function saveProfile(event) {
     username: formData.get("profileUsername"),
     threeDartAverage: parseOptionalNumber(formData.get("profileThreeDartAverage")),
     dartCounterLink: formData.get("profileDartCounterLink"),
-    bio: formData.get("profileBio")
+    bio: formData.get("profileBio"),
+    profilePicture: currentProfilePicture
   });
 }
 
