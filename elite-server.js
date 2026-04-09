@@ -596,6 +596,19 @@ async function handleApi(request, response, url) {
     return sendJson(response, 200, withSession(state, admin.id));
   }
 
+  if (request.method === "POST" && url.pathname === "/api/admin/site-settings/reset") {
+    const admin = requireAdmin(state, sessionUserId);
+    if (!admin) return sendJson(response, 403, { error: "Admin access required." });
+
+    state.siteSettings = {
+      backgroundColor: "#1a2b3d",
+      accentColor: "#4da6ff",
+      buttonColor: "#4da6ff"
+    };
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, admin.id));
+  }
+
   return sendJson(response, 404, { error: "Not found" });
 }
 
@@ -838,11 +851,11 @@ async function ensureState() {
 
 function normalizeState(raw) {
   const siteSettings = raw?.siteSettings ? {
-    backgroundColor: raw.siteSettings.backgroundColor || "#0d1a28",
+    backgroundColor: raw.siteSettings.backgroundColor || "#1a2b3d",
     accentColor: raw.siteSettings.accentColor || "#4da6ff",
     buttonColor: raw.siteSettings.buttonColor || "#4da6ff"
   } : {
-    backgroundColor: "#0d1a28",
+    backgroundColor: "#1a2b3d",
     accentColor: "#4da6ff",
     buttonColor: "#4da6ff"
   };

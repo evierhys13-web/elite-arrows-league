@@ -6,6 +6,7 @@
   "background_color": "#1a2b3d",
   "theme_color": "#1a2b3d",
   "description": "Elite Arrows darts league dashboard.",
+  "version": "2",
   "icons": [
     {
       "src": "/icon.svg",

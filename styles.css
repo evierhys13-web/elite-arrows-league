@@ -24,13 +24,26 @@
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   min-height: 100vh;
-  color: var(--text);
+  color: var(--text) !important;
   font-family: "Trebuchet MS", "Segoe UI", sans-serif;
-  background-color: #1a2b3d;
-  background: #1a2b3d;
+  background-color: #1a2b3d !important;
+  background: #1a2b3d !important;
+}
+
+body.theme-light {
+  background: #f2e6d5 !important;
+}
+
+body.welcome-page {
+  background-color: #1a2b3d !important;
+  color: #edf4f7 !important;
+}
+
+body.dashboard-page {
+  background-color: #1a2b3d !important;
 }
 
 body.theme-light {

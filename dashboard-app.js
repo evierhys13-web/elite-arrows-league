@@ -94,6 +94,7 @@ announcementForm.addEventListener("submit", saveAnnouncement);
 exportButton.addEventListener("click", exportData);
 importButton.addEventListener("click", importLeagueData);
 siteSettingsForm.addEventListener("submit", saveSiteSettings);
+document.querySelector("#resetSiteColorsButton")?.addEventListener("click", resetSiteColors);
 openSubscriptionButton.addEventListener("click", () => setActiveSection("payment"));
 
 document.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -661,6 +662,13 @@ async function saveSiteSettings(event) {
   window.alert("Site colors updated successfully!");
 }
 
+async function resetSiteColors() {
+  if (!confirm("Reset all site colors to defaults (dark blue)? This will refresh the page.")) return;
+  await adminSend("/api/admin/site-settings/reset", {});
+  applySiteColors();
+  window.location.reload();
+}
+
 async function send(url, payload) {
   try {
     const response = await fetch(url, {
@@ -965,7 +973,7 @@ function applyTheme(theme) {
 
 function applySiteColors() {
   const settings = state.siteSettings || {};
-  const bg = settings.backgroundColor || "#0d1a28";
+  const bg = settings.backgroundColor || "#1a2b3d";
   const accent = settings.accentColor || "#4da6ff";
   const button = settings.buttonColor || "#4da6ff";
   
