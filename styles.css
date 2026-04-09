@@ -529,6 +529,16 @@ body > * {
   background:
     linear-gradient(180deg, rgba(16, 24, 34, 0.95), rgba(11, 17, 25, 0.94)),
     radial-gradient(circle at top right, rgba(193, 31, 31, 0.14), transparent 36%);
+  z-index: 10;
+}
+
+.sidebar-nav {
+  z-index: 11;
+}
+
+.nav-button {
+  z-index: 12;
+  position: relative;
 }
 
 .theme-light .app-sidebar {
@@ -543,6 +553,9 @@ body > * {
 .sidebar-actions {
   display: grid;
   gap: 0.75rem;
+  pointer-events: auto;
+  position: relative;
+  z-index: 11;
 }
 
 .button-link {
@@ -590,6 +603,8 @@ body > * {
   border: 1px solid var(--line);
   color: var(--muted);
   text-align: left;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .nav-button.is-active,
