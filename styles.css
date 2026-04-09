@@ -330,6 +330,15 @@ body::before {
   gap: 1rem;
 }
 
+.chat-sidebar-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.chat-sidebar-heading {
+  margin-bottom: 0;
+}
+
 .chat-room-list,
 .chat-messages {
   display: grid;
@@ -348,6 +357,11 @@ body::before {
   padding-right: 0.35rem;
 }
 
+.chat-room-list .nav-button {
+  display: grid;
+  gap: 0.25rem;
+}
+
 .message-reply {
   padding: 0.75rem;
   border-radius: 14px;
@@ -358,6 +372,76 @@ body::before {
 
 .message-reply p {
   margin: 0.35rem 0 0;
+}
+
+.chat-list-card {
+  align-items: center;
+}
+
+.chat-action-group {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.chat-composer {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.chat-toolbar {
+  flex-wrap: wrap;
+}
+
+.chat-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.chat-reply-chip {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.8rem 0.9rem;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.chat-reply-chip p {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.chat-icon-button {
+  min-width: 46px;
+  min-height: 46px;
+  padding-inline: 0.9rem;
+}
+
+.chat-message-card {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.chat-message-card.is-own {
+  border-color: rgba(191, 59, 22, 0.38);
+  box-shadow: inset 0 0 0 1px rgba(191, 59, 22, 0.18);
+}
+
+.chat-message-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
 }
 
 .dashboard-page {
@@ -502,6 +586,13 @@ body::before {
   background:
     linear-gradient(135deg, rgba(24, 36, 49, 0.96), rgba(17, 25, 35, 0.94)),
     radial-gradient(circle at right center, rgba(193, 31, 31, 0.12), transparent 28%);
+}
+
+.theme-light .season-banner {
+  background:
+    linear-gradient(145deg, rgba(255, 252, 247, 0.98), rgba(246, 237, 224, 0.95)),
+    radial-gradient(circle at right center, rgba(193, 31, 31, 0.08), transparent 28%);
+  border-color: rgba(76, 49, 27, 0.12);
 }
 
 .panel-wide {

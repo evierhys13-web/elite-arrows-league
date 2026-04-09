@@ -109,6 +109,63 @@ async function handleApi(request, response, url) {
     return sendJson(response, 200, withSession(state, currentUser.id));
   }
 
+  if (request.method === "POST" && url.pathname === "/api/chat/friend-request") {
+    const currentUser = requireSession(state, sessionUserId);
+    if (!currentUser) return sendJson(response, 401, { error: "You need to sign in first." });
+
+    const targetId = payload.targetId?.trim();
+    const targetUser = state.players.find((player) => player.id === targetId);
+    if (!targetUser || targetId === currentUser.id) {
+      return sendJson(response, 400, { error: "Choose a valid player to add." });
+    }
+    if (hasFriendship(state, currentUser.id, targetId)) {
+      return sendJson(response, 400, { error: "You are already friends with that player." });
+    }
+    if (findPendingFriendRequest(state, currentUser.id, targetId) || findPendingFriendRequest(state, targetId, currentUser.id)) {
+      return sendJson(response, 400, { error: "A friend request is already pending." });
+    }
+
+    state.friendRequests.push({
+      id: randomUUID(),
+      fromUserId: currentUser.id,
+      toUserId: targetId,
+      createdAt: new Date().toISOString()
+    });
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, currentUser.id));
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/chat/friend-accept") {
+    const currentUser = requireSession(state, sessionUserId);
+    if (!currentUser) return sendJson(response, 401, { error: "You need to sign in first." });
+
+    const requestEntry = state.friendRequests.find((entry) => entry.id === payload.requestId && entry.toUserId === currentUser.id);
+    if (!requestEntry) return sendJson(response, 404, { error: "Friend request not found." });
+
+    if (!hasFriendship(state, requestEntry.fromUserId, requestEntry.toUserId)) {
+      state.friendships.push({
+        id: randomUUID(),
+        userIds: [requestEntry.fromUserId, requestEntry.toUserId].sort(),
+        createdAt: new Date().toISOString()
+      });
+    }
+    state.friendRequests = state.friendRequests.filter((entry) => entry.id !== requestEntry.id);
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, currentUser.id));
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/chat/friend-decline") {
+    const currentUser = requireSession(state, sessionUserId);
+    if (!currentUser) return sendJson(response, 401, { error: "You need to sign in first." });
+
+    const requestEntry = state.friendRequests.find((entry) => entry.id === payload.requestId && entry.toUserId === currentUser.id);
+    if (!requestEntry) return sendJson(response, 404, { error: "Friend request not found." });
+
+    state.friendRequests = state.friendRequests.filter((entry) => entry.id !== requestEntry.id);
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, currentUser.id));
+  }
+
   if (request.method === "POST" && url.pathname === "/api/chat/message/edit") {
     const currentUser = requireSession(state, sessionUserId);
     if (!currentUser) return sendJson(response, 401, { error: "You need to sign in first." });
@@ -398,6 +455,9 @@ async function handleApi(request, response, url) {
     state.players = state.players.filter((player) => player.id !== payload.id);
     state.matches = state.matches.filter((match) => match.playerOneId !== payload.id && match.playerTwoId !== payload.id);
     state.fixtures = state.fixtures.filter((fixture) => fixture.playerOneId !== payload.id && fixture.playerTwoId !== payload.id);
+    state.friendships = state.friendships.filter((entry) => !entry.userIds.includes(payload.id));
+    state.friendRequests = state.friendRequests.filter((entry) => entry.fromUserId !== payload.id && entry.toUserId !== payload.id);
+    state.chats = state.chats.filter((room) => !(room.id.startsWith("direct:") && normalizeDirectParticipantIds(room.id).includes(payload.id)));
     await writeState(state);
     return sendJson(response, 200, withSession(state, admin.id));
   }
@@ -579,7 +639,7 @@ function normalizeChats(rawChats) {
     name: room.name || "Chat",
     type: room.type || "group",
     divisionId: room.divisionId || "",
-    participantIds: Array.isArray(room.participantIds) ? room.participantIds : [],
+    participantIds: Array.isArray(room.participantIds) ? room.participantIds : normalizeDirectParticipantIds(room.id),
     messages: Array.isArray(room.messages) ? room.messages.map((message) => ({
       id: message.id || randomUUID(),
       authorId: message.authorId || "",
@@ -619,6 +679,29 @@ function normalizePaymentStatus(value) {
   return ["unpaid", "pending", "paid"].includes(value) ? value : "unpaid";
 }
 
+function normalizeFriendships(rawFriendships) {
+  if (!Array.isArray(rawFriendships)) return [];
+  return rawFriendships
+    .map((friendship) => ({
+      id: friendship.id || randomUUID(),
+      userIds: Array.isArray(friendship.userIds) ? friendship.userIds.filter(Boolean).slice(0, 2).sort() : [],
+      createdAt: friendship.createdAt || new Date().toISOString()
+    }))
+    .filter((friendship) => friendship.userIds.length === 2);
+}
+
+function normalizeFriendRequests(rawRequests) {
+  if (!Array.isArray(rawRequests)) return [];
+  return rawRequests
+    .map((entry) => ({
+      id: entry.id || randomUUID(),
+      fromUserId: entry.fromUserId || "",
+      toUserId: entry.toUserId || "",
+      createdAt: entry.createdAt || new Date().toISOString()
+    }))
+    .filter((entry) => entry.fromUserId && entry.toUserId && entry.fromUserId !== entry.toUserId);
+}
+
 function normalizePaymentOptions(rawOptions) {
   return {
     bankTransfer: {
@@ -639,7 +722,7 @@ function normalizePaymentOptions(rawOptions) {
 function getOrCreateRoom(state, roomId) {
   let room = state.chats.find((entry) => entry.id === roomId);
   if (!room) {
-    room = { id: roomId, name: "Direct Chat", type: "direct", divisionId: "", participantIds: [], messages: [] };
+    room = { id: roomId, name: "Direct Chat", type: "direct", divisionId: "", participantIds: normalizeDirectParticipantIds(roomId), messages: [] };
     state.chats.push(room);
   }
   return room;
@@ -650,7 +733,7 @@ function canAccessRoom(state, user, roomId) {
   if (roomId === `division-${user.divisionId}`) return true;
   if (roomId.startsWith("direct:")) {
     const ids = roomId.replace("direct:", "").split("--").filter(Boolean);
-    return ids.includes(user.id);
+    return ids.length === 2 && ids.includes(user.id) && hasFriendship(state, ids[0], ids[1]);
   }
   const room = state.chats.find((entry) => entry.id === roomId);
   if (!room) return false;
@@ -679,6 +762,20 @@ function createPlayer({ username, email, password, divisionId, bio, dartCounterL
     paymentProofData: "",
     paymentProofName: ""
   };
+}
+
+function normalizeDirectParticipantIds(roomId) {
+  if (!roomId?.startsWith("direct:")) return [];
+  return roomId.replace("direct:", "").split("--").filter(Boolean).slice(0, 2).sort();
+}
+
+function hasFriendship(state, firstUserId, secondUserId) {
+  const target = [firstUserId, secondUserId].sort().join("--");
+  return state.friendships.some((entry) => entry.userIds.join("--") === target);
+}
+
+function findPendingFriendRequest(state, fromUserId, toUserId) {
+  return state.friendRequests.find((entry) => entry.fromUserId === fromUserId && entry.toUserId === toUserId) ?? null;
 }
 
 async function serveStatic(response, pathName) {
@@ -788,6 +885,8 @@ function normalizeState(raw) {
       createdAt: announcement.createdAt || new Date().toISOString(),
       updatedAt: announcement.updatedAt || ""
     })) : [],
+    friendships: normalizeFriendships(raw?.friendships),
+    friendRequests: normalizeFriendRequests(raw?.friendRequests),
     chats: normalizeChats(raw?.chats),
     paymentOptions: normalizePaymentOptions(raw?.paymentOptions),
     matches: Array.isArray(raw?.matches) ? raw.matches.map((match) => ({
@@ -819,6 +918,8 @@ function createInitialState() {
     fixtures: [],
     paymentOptions: normalizePaymentOptions(undefined),
     announcements: [],
+    friendships: [],
+    friendRequests: [],
     chats: [],
     players: [],
     matches: []
@@ -861,6 +962,8 @@ function sanitizeState(state) {
     })),
     paymentOptions: state.paymentOptions,
     announcements: state.announcements,
+    friendships: state.friendships,
+    friendRequests: state.friendRequests,
     chats: state.chats
   };
 }
@@ -878,6 +981,8 @@ function serializeState(state) {
     fixtures: state.fixtures,
     paymentOptions: state.paymentOptions,
     announcements: state.announcements,
+    friendships: state.friendships,
+    friendRequests: state.friendRequests,
     chats: state.chats,
     players: state.players,
     matches: state.matches

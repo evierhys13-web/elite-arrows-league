@@ -20,6 +20,7 @@ let deferredInstallPrompt = null;
 let touchStartX = 0;
 let touchStartY = 0;
 let previousPaymentStatus = "";
+let seasonTimerHandle = null;
 
 const navButtons = [...document.querySelectorAll(".nav-button")];
 const mobileNavButtons = [...document.querySelectorAll(".mobile-nav-button")];
@@ -107,6 +108,7 @@ window.addEventListener("appinstalled", () => {
 applyTheme(localStorage.getItem(themeKey) || "dark");
 registerServiceWorker();
 bootstrap();
+startSeasonTimer();
 
 async function bootstrap() {
   if (!state.sessionUserId) {
@@ -212,8 +214,9 @@ function renderSeasonMetrics() {
   const days = Math.floor(diff / 86400000);
   const hours = Math.floor((diff % 86400000) / 3600000);
   const minutes = Math.floor((diff % 3600000) / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
   seasonMetrics.innerHTML = `
-    <div class="metric"><span>${label}</span><strong>${days}d ${hours}h ${minutes}m</strong></div>
+    <div class="metric"><span>${label}</span><strong>${days}d ${hours}h ${minutes}m ${seconds}s</strong></div>
     <div class="metric"><span>Season Window</span><strong>${formatDate(season.startDate)} to ${formatDate(season.endDate)}</strong></div>
     <div class="metric"><span>Pending Approvals</span><strong>${pendingMatches().length}</strong></div>
   `;
@@ -980,4 +983,12 @@ function registerServiceWorker() {
   navigator.serviceWorker.getRegistrations().then((registrations) => {
     registrations.forEach((registration) => registration.unregister());
   }).catch(() => {});
+}
+
+function startSeasonTimer() {
+  if (seasonTimerHandle) window.clearInterval(seasonTimerHandle);
+  seasonTimerHandle = window.setInterval(() => {
+    if (!currentUser()) return;
+    renderSeasonMetrics();
+  }, 1000);
 }
