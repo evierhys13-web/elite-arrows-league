@@ -47,12 +47,7 @@ const fixtureCards = document.querySelector("#fixtureCards");
 const opponentSelect = document.querySelector("#opponentId");
 const fixtureSelect = document.querySelector("#fixtureId");
 const matchForm = document.querySelector("#matchForm");
-const profileDrawer = document.querySelector("#profileDrawer");
-const profileCard = document.querySelector("#profileCard");
-const profileForm = document.querySelector("#profileForm");
-const logoutButton = document.querySelector("#logoutButton");
-const openProfileButton = document.querySelector("#openProfileButton");
-const closeProfileButton = document.querySelector("#closeProfileButton");
+const profileEditForm = document.querySelector("#profileEditForm");
 const installButton = document.querySelector("#installButton");
 const topbarInstallButton = document.querySelector("#topbarInstallButton");
 const themeToggleButton = document.querySelector("#themeToggleButton");
@@ -75,18 +70,12 @@ const importButton = document.querySelector("#importButton");
 const importData = document.querySelector("#importData");
 const siteSettingsForm = document.querySelector("#siteSettingsForm");
 const profilePictureInput = document.querySelector("#profilePictureInput");
-const profilePictureEditInput = document.querySelector("#profilePictureEditInput");
-const profileAvatarImg = document.querySelector("#profileAvatarImg");
-const profileAvatarInitial = document.querySelector("#profileAvatarInitial");
-const profileEditAvatarImg = document.querySelector("#profileEditAvatarImg");
-const profileEditAvatarInitial = document.querySelector("#profileEditAvatarInitial");
 const sectionOrder = ["overview", "payment", "results", "tables", "profiles", "submit", "admin"];
 
 navButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
 mobileNavButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
 logoutButton.addEventListener("click", signOut);
-openProfileButton.addEventListener("click", () => { profileDrawer.hidden = false; });
-closeProfileButton.addEventListener("click", () => { profileDrawer.hidden = true; });
+profileEditForm?.addEventListener("click", (e) => { e.stopPropagation(); });
 themeToggleButton.addEventListener("click", toggleTheme);
 topbarThemeToggleButton.addEventListener("click", toggleTheme);
 installButton.addEventListener("click", promptInstall);
@@ -104,7 +93,6 @@ importButton.addEventListener("click", importLeagueData);
 siteSettingsForm.addEventListener("submit", saveSiteSettings);
 document.querySelector("#resetSiteColorsButton")?.addEventListener("click", resetSiteColors);
 profilePictureInput?.addEventListener("change", handleProfilePictureUpload);
-profilePictureEditInput?.addEventListener("change", handleProfilePictureUpload);
 openSubscriptionButton.addEventListener("click", () => setActiveSection("payment"));
 
 document.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -349,18 +337,6 @@ function updateProfileAvatars() {
       profileAvatarImg.style.display = "none";
       profileAvatarInitial.textContent = initial;
       profileAvatarInitial.style.display = "flex";
-    }
-  }
-  
-  if (profileEditAvatarImg) {
-    if (img) {
-      profileEditAvatarImg.src = img;
-      profileEditAvatarImg.style.display = "block";
-      profileEditAvatarInitial.style.display = "none";
-    } else {
-      profileEditAvatarImg.style.display = "none";
-      profileEditAvatarInitial.textContent = initial;
-      profileEditAvatarInitial.style.display = "flex";
     }
   }
 }

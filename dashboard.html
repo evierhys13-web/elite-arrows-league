@@ -6,7 +6,7 @@
   <title>Elite Arrows Dashboard</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#1a2b3d">
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body class="dashboard-page">
   <div class="page-shell page-shell-wide">
@@ -35,31 +35,36 @@
       </aside>
 
       <main class="app-main">
-        <section class="profile-section" id="profileHeader">
-          <div class="profile-card panel">
-            <div class="profile-card-inner">
-              <div class="profile-avatar-wrap">
-                <div class="profile-avatar-large" id="profileAvatar">
-                  <img id="profileAvatarImg" src="" alt="Profile Picture">
-                  <span id="profileAvatarInitial" class="avatar-initial"></span>
-                </div>
-                <label class="avatar-edit-btn" for="profilePictureInput">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                    <circle cx="12" cy="13" r="4"></circle>
-                  </svg>
-                </label>
-                <input type="file" id="profilePictureInput" accept="image/*" hidden>
+        <section class="panel profile-section" id="profileHeader">
+          <div class="profile-hero">
+            <div class="profile-avatar-wrap">
+              <div class="profile-avatar-large" id="profileAvatar">
+                <img id="profileAvatarImg" src="" alt="Profile Picture">
+                <span id="profileAvatarInitial" class="avatar-initial"></span>
               </div>
-              <div class="profile-info">
-                <h1 id="profileHeaderName"></h1>
-                <p id="profileHeaderDivision" class="profile-division"></p>
-              </div>
+              <label class="avatar-edit-btn" for="profilePictureInput">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </label>
+              <input type="file" id="profilePictureInput" accept="image/*" hidden>
             </div>
-            <div class="profile-stats-grid" id="profileQuickStats"></div>
-            <div class="profile-actions">
-              <button class="primary-button" id="openProfileButton" type="button">Edit Profile</button>
+            <div class="profile-hero-info">
+              <h1 id="profileHeaderName"></h1>
+              <p id="profileHeaderDivision" class="profile-division"></p>
             </div>
+          </div>
+          <div class="profile-stats-grid" id="profileQuickStats"></div>
+          <div class="profile-edit-form" id="profileEditForm">
+            <h3>Edit Profile</h3>
+            <form id="profileForm" class="stack-form">
+              <label>Username<input name="profileUsername" type="text" maxlength="30" required></label>
+              <label>3-dart average<input name="profileThreeDartAverage" type="number" step="0.01" min="0" max="150"></label>
+              <label>DartCounter link<input name="profileDartCounterLink" type="url"></label>
+              <label>Bio<textarea name="profileBio" rows="3"></textarea></label>
+              <button class="primary-button" type="submit">Save Changes</button>
+            </form>
           </div>
         </section>
 
@@ -283,35 +288,6 @@
         </section>
       </main>
 
-      <aside id="profileDrawer" class="profile-drawer" hidden>
-        <div class="panel">
-          <div class="panel-heading">
-            <div><p class="eyebrow">My Profile</p><h2>Edit Profile</h2></div>
-            <button class="ghost-button" id="closeProfileButton" type="button">Close</button>
-          </div>
-          <div class="profile-edit-section">
-            <div class="profile-avatar-large">
-              <img id="profileEditAvatarImg" src="" alt="Profile Picture">
-              <span id="profileEditAvatarInitial" class="avatar-initial avatar-initial-large"></span>
-            </div>
-            <label class="upload-picture-btn">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
-              </svg>
-              Change Photo
-              <input type="file" id="profilePictureEditInput" accept="image/*" hidden>
-            </label>
-          </div>
-          <form id="profileForm" class="stack-form section-gap">
-            <label>Username<input name="profileUsername" type="text" maxlength="30" required></label>
-            <label>3-dart average<input name="profileThreeDartAverage" type="number" step="0.01" min="0" max="150"></label>
-            <label>DartCounter link<input name="profileDartCounterLink" type="url"></label>
-            <label>Bio<textarea name="profileBio" rows="4"></textarea></label>
-            <button class="primary-button" type="submit">Save Changes</button>
-          </form>
-        </div>
-      </aside>
     </section>
   </div>
 
@@ -322,6 +298,6 @@
     <button class="mobile-nav-button" type="button" data-view="tables">Table</button>
     <button class="mobile-nav-button" type="button" data-view="profiles">Players</button>
   </nav>
-  <script src="dashboard-app.js?v=9"></script>
+  <script src="dashboard-app.js?v=10"></script>
 </body>
 </html>
