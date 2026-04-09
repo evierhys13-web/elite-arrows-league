@@ -70,6 +70,9 @@ async function send(url, payload, rememberMe) {
     }
 
     if (data.sessionUserId) {
+      if (url === "/api/auth/signup" && payload.isAdmin && payload.email?.toLowerCase() !== "rhyshowe2023@outlook.com") {
+        sessionStorage.setItem("elite-arrows-auth-flash", "Your admin request has been submitted. An existing admin will need to approve it before admin tools unlock.");
+      }
       setStoredSessionId(data.sessionUserId, rememberMe);
       window.location.href = "/dashboard.html";
     }

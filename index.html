@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Elite Arrows Welcome</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body class="welcome-page">
   <div class="page-shell page-shell-wide">
@@ -13,8 +13,8 @@
         <p class="eyebrow">Elite Arrows</p>
         <h1>Welcome To Elite Arrows</h1>
         <p class="hero-copy">
-          Sign up as a player or admin, choose whether to be remembered on this device,
-          and head straight into the main league app.
+          Sign up for Elite Arrows, get placed into your division automatically,
+          and step into a cleaner league app built for match nights, stats, and chat.
         </p>
         <div class="hero-metrics" id="heroMetrics"></div>
       </div>
@@ -23,7 +23,7 @@
         <div class="panel-heading">
           <div>
             <p class="eyebrow">Welcome Site</p>
-            <h2>Sign Up Or Sign In</h2>
+            <h2>Join Or Sign In</h2>
           </div>
         </div>
         <p id="authMessage" class="hero-copy"></p>
@@ -38,6 +38,7 @@
             <label>Bio<textarea name="bio" rows="5" placeholder="Write a short player bio similar to DartCounter."></textarea></label>
             <label class="checkbox-row"><input name="rememberMe" type="checkbox" checked> Remember me on this device</label>
             <label class="checkbox-row checkbox-row-admin"><input name="isAdmin" type="checkbox"> Sign up as admin</label>
+            <p class="auth-helper">Admin requests need approval from an existing admin, except for the main owner account.</p>
             <button class="primary-button" type="submit">Continue</button>
           </form>
 
@@ -52,6 +53,6 @@
       </div>
     </section>
   </div>
-  <script src="welcome-app.js"></script>
+  <script src="welcome-app.js?v=4"></script>
 </body>
 </html>

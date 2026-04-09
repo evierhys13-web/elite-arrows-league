@@ -29,10 +29,10 @@ body {
 
 body.welcome-page {
   background:
-    radial-gradient(circle at 12% 18%, rgba(191, 59, 22, 0.22), transparent 18%),
-    radial-gradient(circle at 86% 22%, rgba(35, 106, 79, 0.18), transparent 20%),
-    radial-gradient(circle at 18% 78%, rgba(143, 42, 17, 0.18), transparent 17%),
-    linear-gradient(160deg, #efe4d0, #f7f1e4 38%, #eadbc1 100%);
+    radial-gradient(circle at 16% 18%, rgba(225, 64, 64, 0.2), transparent 16%),
+    radial-gradient(circle at 84% 20%, rgba(39, 158, 120, 0.16), transparent 18%),
+    linear-gradient(180deg, #101821 0%, #14212c 42%, #0d141c 100%);
+  color: #edf4f7;
 }
 
 body.welcome-page::after {
@@ -52,7 +52,7 @@ body.welcome-page::after {
     radial-gradient(circle at 86% 26%, rgba(35, 106, 79, 0.85) 0 10.9%, transparent 11.1%),
     linear-gradient(120deg, transparent 47%, rgba(35, 22, 13, 0.22) 47.4%, rgba(35, 22, 13, 0.22) 48.1%, transparent 48.5%),
     linear-gradient(300deg, transparent 61%, rgba(191, 59, 22, 0.16) 61.4%, rgba(191, 59, 22, 0.16) 62.1%, transparent 62.5%);
-  opacity: 0.55;
+  opacity: 0.34;
 }
 
 body.dashboard-page {
@@ -104,21 +104,25 @@ body::before {
 .welcome-shell {
   display: grid;
   justify-items: center;
-  gap: 1.5rem;
-  padding-top: 1rem;
+  gap: 2rem;
+  padding: 2rem 1rem 3rem;
 }
 
 .welcome-copy {
-  width: min(900px, 100%);
-  padding: 1rem 0.5rem 0;
+  width: min(980px, 100%);
+  padding: 1.2rem 0.5rem 0;
   text-align: center;
 }
 
 .welcome-auth {
-  width: min(760px, 100%);
-  padding: 1.4rem;
+  width: min(920px, 100%);
+  padding: 1.6rem;
   display: grid;
   gap: 1rem;
+  background:
+    linear-gradient(180deg, rgba(18, 28, 39, 0.92), rgba(12, 20, 29, 0.96)),
+    radial-gradient(circle at top right, rgba(225, 64, 64, 0.12), transparent 30%);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .hero {
@@ -153,6 +157,7 @@ body::before {
 
 .welcome-copy .hero-copy {
   margin-inline: auto;
+  color: rgba(237, 244, 247, 0.76);
 }
 
 .eyebrow,
@@ -223,10 +228,58 @@ body::before {
 }
 
 .auth-grid-separate .auth-panel {
-  padding: 1.1rem;
-  border-radius: 20px;
-  border: 1px solid var(--line);
-  background: rgba(255, 251, 245, 0.72);
+  padding: 1.25rem;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(23, 35, 48, 0.88), rgba(16, 24, 34, 0.92)),
+    radial-gradient(circle at top left, rgba(39, 158, 120, 0.08), transparent 30%);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+}
+
+.welcome-page .panel,
+.welcome-page .hero-card {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.welcome-page .panel h2,
+.welcome-page .panel h3,
+.welcome-page .hero h1,
+.welcome-page .eyebrow,
+.welcome-page label,
+.welcome-page .metric,
+.welcome-page .hero-copy,
+.welcome-page .team-chip p,
+.welcome-page .division-table-card p {
+  color: inherit;
+}
+
+.welcome-page .metric {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.welcome-page input,
+.welcome-page select,
+.welcome-page textarea {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #edf4f7;
+}
+
+.welcome-page input::placeholder,
+.welcome-page textarea::placeholder {
+  color: rgba(237, 244, 247, 0.44);
+}
+
+.welcome-page .primary-button {
+  background: linear-gradient(135deg, #e14040, #ff7a28);
+}
+
+.auth-helper {
+  margin: -0.2rem 0 0;
+  color: rgba(237, 244, 247, 0.62);
+  font-size: 0.88rem;
 }
 
 .metric {
@@ -702,12 +755,22 @@ tbody tr:nth-child(1) {
   width: min(92vw, 640px);
   z-index: 10;
   display: none;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.55rem;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 0.6rem;
   padding: 0.7rem;
   border-radius: 24px;
   background: rgba(9, 16, 24, 0.94);
   backdrop-filter: blur(16px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  justify-content: flex-start;
+  scrollbar-width: none;
+  overflow: auto;
+}
+
+.mobile-bottom-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .theme-light .mobile-bottom-nav {
@@ -716,9 +779,11 @@ tbody tr:nth-child(1) {
 
 .mobile-nav-button {
   border-radius: 16px;
-  padding: 0.8rem 0.5rem;
+  padding: 0.8rem 0.95rem;
   background: transparent;
   color: var(--muted);
+  white-space: nowrap;
+  min-width: max-content;
 }
 
 .mobile-nav-button.is-active {

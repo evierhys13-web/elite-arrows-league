@@ -25,6 +25,7 @@ const DIVISIONS = [
   { id: "diamond", name: "Diamond" },
   { id: "gold", name: "Gold" }
 ];
+const ADMIN_EMAIL_EXCEPTION = "rhyshowe2023@outlook.com";
 
 http.createServer(async (request, response) => {
   try {
@@ -214,6 +215,28 @@ async function handleApi(request, response, url) {
     return sendJson(response, 200, withSession(state, admin.id));
   }
 
+  if (request.method === "POST" && url.pathname === "/api/admin/approve-admin") {
+    const admin = requireAdmin(state, sessionUserId);
+    if (!admin) return sendJson(response, 403, { error: "Admin access required." });
+    const player = state.players.find((entry) => entry.id === payload.id);
+    if (!player) return sendJson(response, 404, { error: "Player not found." });
+    player.isAdmin = true;
+    player.adminRequestPending = false;
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, admin.id));
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/admin/reject-admin") {
+    const admin = requireAdmin(state, sessionUserId);
+    if (!admin) return sendJson(response, 403, { error: "Admin access required." });
+    const player = state.players.find((entry) => entry.id === payload.id);
+    if (!player) return sendJson(response, 404, { error: "Player not found." });
+    player.isAdmin = false;
+    player.adminRequestPending = false;
+    await writeState(state);
+    return sendJson(response, 200, withSession(state, admin.id));
+  }
+
   if (request.method === "GET" && url.pathname === "/api/admin/export") {
     const admin = requireAdmin(state, sessionUserId);
     if (!admin) return sendJson(response, 403, { error: "Admin access required." });
@@ -348,6 +371,7 @@ async function handleApi(request, response, url) {
       player.divisionId = divisionForAverage(threeDartAverage);
       player.teamId = payload.teamId?.trim() ?? "";
       player.isAdmin = Boolean(payload.isAdmin);
+      player.adminRequestPending = Boolean(payload.adminRequestPending);
     } else {
       state.players.push(createPlayer({
         username,
@@ -358,6 +382,7 @@ async function handleApi(request, response, url) {
         dartCounterLink: payload.dartCounterLink ?? "",
         threeDartAverage,
         isAdmin: Boolean(payload.isAdmin),
+        adminRequestPending: Boolean(payload.adminRequestPending),
         teamId: payload.teamId?.trim() ?? ""
       }));
     }
@@ -510,6 +535,9 @@ async function handleSignup(response, state, payload) {
     return sendJson(response, 400, { error: "That email or username is already in use." });
   }
 
+  const adminRequested = Boolean(payload.isAdmin);
+  const isAdmin = adminRequested && email === ADMIN_EMAIL_EXCEPTION;
+
   const player = createPlayer({
     username,
     email,
@@ -518,7 +546,8 @@ async function handleSignup(response, state, payload) {
     bio: payload.bio ?? "",
     dartCounterLink: payload.dartCounterLink ?? "",
     threeDartAverage,
-    isAdmin: Boolean(payload.isAdmin),
+    isAdmin,
+    adminRequestPending: adminRequested && !isAdmin,
     teamId: ""
   });
 
@@ -629,7 +658,7 @@ function canAccessRoom(state, user, roomId) {
   return room.type !== "announcement";
 }
 
-function createPlayer({ username, email, password, divisionId, bio, dartCounterLink, threeDartAverage, isAdmin, teamId }) {
+function createPlayer({ username, email, password, divisionId, bio, dartCounterLink, threeDartAverage, isAdmin, adminRequestPending, teamId }) {
   return {
     id: randomUUID(),
     username,
@@ -640,6 +669,7 @@ function createPlayer({ username, email, password, divisionId, bio, dartCounterL
     dartCounterLink,
     threeDartAverage,
     isAdmin: Boolean(isAdmin),
+    adminRequestPending: Boolean(adminRequestPending),
     teamId: teamId ?? "",
     paymentStatus: Boolean(isAdmin) ? "paid" : "unpaid",
     paymentMethod: "",
@@ -740,6 +770,7 @@ function normalizeState(raw) {
       dartCounterLink: player.dartCounterLink ?? "",
       threeDartAverage: parseOptionalNumber(player.threeDartAverage),
       isAdmin: Boolean(player.isAdmin),
+      adminRequestPending: Boolean(player.adminRequestPending),
       teamId: player.teamId ?? "",
       paymentStatus: Boolean(player.isAdmin) ? "paid" : normalizePaymentStatus(player.paymentStatus),
       paymentMethod: player.paymentMethod ?? "",
@@ -818,6 +849,7 @@ function sanitizeState(state) {
       dartCounterLink: player.dartCounterLink,
       threeDartAverage: player.threeDartAverage,
       isAdmin: Boolean(player.isAdmin),
+      adminRequestPending: Boolean(player.adminRequestPending),
       teamId: player.teamId ?? "",
       paymentStatus: player.paymentStatus,
       paymentMethod: player.paymentMethod,

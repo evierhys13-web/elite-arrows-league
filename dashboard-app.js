@@ -123,6 +123,11 @@ async function bootstrap() {
       return;
     }
     previousPaymentStatus = currentUser()?.paymentStatus || "";
+    const authFlash = sessionStorage.getItem("elite-arrows-auth-flash");
+    if (authFlash) {
+      window.alert(authFlash);
+      sessionStorage.removeItem("elite-arrows-auth-flash");
+    }
     render();
   } catch {
     window.alert("Could not load the dashboard right now.");
@@ -420,7 +425,31 @@ function renderAdmin() {
   state.teams.forEach((team) => teamCards.append(createAdminItemCard(team.name, `Players: ${state.players.filter((player) => player.teamId === team.id).length}`, () => loadTeam(team), () => adminSend("/api/admin/team/delete", { id: team.id }))));
 
   adminPlayerCards.innerHTML = "";
-  state.players.forEach((player) => adminPlayerCards.append(createAdminItemCard(player.username, `${player.email} | ${getDivisionName(player.divisionId)}${player.isAdmin ? " | Admin" : ""}`, () => loadAdminPlayer(player), () => adminSend("/api/admin/player/delete", { id: player.id }))));
+  state.players.forEach((player) => {
+    const card = createAdminItemCard(
+      player.username,
+      `${player.email} | ${getDivisionName(player.divisionId)}${player.isAdmin ? " | Admin" : ""}${player.adminRequestPending ? " | Admin request pending" : ""}`,
+      () => loadAdminPlayer(player),
+      () => adminSend("/api/admin/player/delete", { id: player.id })
+    );
+    if (player.adminRequestPending) {
+      const actions = document.createElement("div");
+      actions.className = "topbar-actions section-gap";
+      const approveButton = document.createElement("button");
+      approveButton.className = "primary-button";
+      approveButton.type = "button";
+      approveButton.textContent = "Approve Admin";
+      approveButton.addEventListener("click", () => adminSend("/api/admin/approve-admin", { id: player.id }));
+      const rejectButton = document.createElement("button");
+      rejectButton.className = "ghost-button";
+      rejectButton.type = "button";
+      rejectButton.textContent = "Reject Admin";
+      rejectButton.addEventListener("click", () => adminSend("/api/admin/reject-admin", { id: player.id }));
+      actions.append(approveButton, rejectButton);
+      card.append(actions);
+    }
+    adminPlayerCards.append(card);
+  });
 
   adminFixtureCards.innerHTML = "";
   currentFixtures().forEach((fixture) => adminFixtureCards.append(createAdminItemCard(`${getUsername(fixture.playerOneId)} vs ${getUsername(fixture.playerTwoId)}`, formatDate(fixture.scheduledDate), () => loadFixture(fixture), () => adminSend("/api/admin/fixture/delete", { id: fixture.id }))));
@@ -563,7 +592,8 @@ async function saveAdminPlayer(event) {
     teamId: formData.get("playerTeamId"),
     dartCounterLink: formData.get("playerDartCounterLink"),
     bio: formData.get("playerBio"),
-    isAdmin: formData.get("playerIsAdmin") === "on"
+    isAdmin: formData.get("playerIsAdmin") === "on",
+    adminRequestPending: false
   });
   adminPlayerForm.reset();
 }
@@ -947,7 +977,7 @@ function handleTouchEnd(event) {
 
 function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js").catch(() => {});
-  });
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    registrations.forEach((registration) => registration.unregister());
+  }).catch(() => {});
 }
