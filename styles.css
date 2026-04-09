@@ -1,8 +1,10 @@
 :root {
   --bg: #1a2b3d;
   --bg-accent: #243447;
-  --surface: rgba(26, 43, 61, 0.88);
-  --surface-strong: rgba(36, 52, 71, 0.95);
+  --surface: rgba(26, 43, 61, 0.75);
+  --surface-strong: rgba(36, 52, 71, 0.85);
+  --panel-color: #2a4a6a;
+  --panel-transparency: 0.75;
   --text: #e8f0f6;
   --muted: #8fa4b8;
   --line: rgba(136, 164, 196, 0.15);
@@ -17,6 +19,9 @@
   --custom-bg: #1a2b3d;
   --custom-bg-accent: #243447;
   --custom-brand: #4da6ff;
+  --custom-panel-color: #2a4a6a;
+  --custom-panel-transparency: 0.75;
+  --custom-bg-image: "";
 }
 
 * {
@@ -200,9 +205,8 @@ body > * {
 .panel {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(136, 164, 196, 0.25);
   border-radius: 24px;
-  background: var(--surface);
   backdrop-filter: blur(16px);
   box-shadow: var(--shadow);
 }
@@ -216,13 +220,7 @@ body > * {
 
 .hero-card::after,
 .panel::after {
-  position: absolute;
-  inset: auto -30% -58% auto;
-  width: 220px;
-  height: 220px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(191, 59, 22, 0.11), transparent 65%);
-  content: "";
+  display: none;
 }
 
 .hero-metrics,

@@ -586,9 +586,12 @@ async function handleApi(request, response, url) {
     if (!admin) return sendJson(response, 403, { error: "Admin access required." });
 
     const settings = {
-      backgroundColor: typeof payload.backgroundColor === "string" ? payload.backgroundColor : "#0d1a28",
+      backgroundColor: typeof payload.backgroundColor === "string" ? payload.backgroundColor : "#1a2b3d",
       accentColor: typeof payload.accentColor === "string" ? payload.accentColor : "#4da6ff",
-      buttonColor: typeof payload.buttonColor === "string" ? payload.buttonColor : "#4da6ff"
+      buttonColor: typeof payload.buttonColor === "string" ? payload.buttonColor : "#4da6ff",
+      panelColor: typeof payload.panelColor === "string" ? payload.panelColor : "#2a4a6a",
+      panelTransparency: typeof payload.panelTransparency === "number" ? Math.max(0, Math.min(1, payload.panelTransparency)) : 0.75,
+      backgroundImage: typeof payload.backgroundImage === "string" ? payload.backgroundImage : ""
     };
 
     state.siteSettings = settings;
@@ -603,7 +606,10 @@ async function handleApi(request, response, url) {
     state.siteSettings = {
       backgroundColor: "#1a2b3d",
       accentColor: "#4da6ff",
-      buttonColor: "#4da6ff"
+      buttonColor: "#4da6ff",
+      panelColor: "#2a4a6a",
+      panelTransparency: 0.75,
+      backgroundImage: ""
     };
     await writeState(state);
     return sendJson(response, 200, withSession(state, admin.id));
@@ -853,11 +859,17 @@ function normalizeState(raw) {
   const siteSettings = raw?.siteSettings ? {
     backgroundColor: raw.siteSettings.backgroundColor || "#1a2b3d",
     accentColor: raw.siteSettings.accentColor || "#4da6ff",
-    buttonColor: raw.siteSettings.buttonColor || "#4da6ff"
+    buttonColor: raw.siteSettings.buttonColor || "#4da6ff",
+    panelColor: raw.siteSettings.panelColor || "#2a4a6a",
+    panelTransparency: typeof raw.siteSettings.panelTransparency === "number" ? raw.siteSettings.panelTransparency : 0.75,
+    backgroundImage: raw.siteSettings.backgroundImage || ""
   } : {
     backgroundColor: "#1a2b3d",
     accentColor: "#4da6ff",
-    buttonColor: "#4da6ff"
+    buttonColor: "#4da6ff",
+    panelColor: "#2a4a6a",
+    panelTransparency: 0.75,
+    backgroundImage: ""
   };
 
   const seasons = Array.isArray(raw?.seasons) && raw.seasons.length

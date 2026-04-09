@@ -655,11 +655,14 @@ async function saveSiteSettings(event) {
   const formData = new FormData(siteSettingsForm);
   await adminSend("/api/admin/site-settings", {
     backgroundColor: formData.get("backgroundColor"),
+    backgroundImage: formData.get("backgroundImage"),
+    panelColor: formData.get("panelColor"),
+    panelTransparency: parseFloat(formData.get("panelTransparency")),
     accentColor: formData.get("accentColor"),
     buttonColor: formData.get("buttonColor")
   });
   applySiteColors();
-  window.alert("Site colors updated successfully!");
+  window.alert("Site settings updated successfully!");
 }
 
 async function resetSiteColors() {
@@ -974,6 +977,9 @@ function applyTheme(theme) {
 function applySiteColors() {
   const settings = state.siteSettings || {};
   const bg = settings.backgroundColor || "#1a2b3d";
+  const panel = settings.panelColor || "#2a4a6a";
+  const transparency = settings.panelTransparency ?? 0.75;
+  const bgImage = settings.backgroundImage || "";
   const accent = settings.accentColor || "#4da6ff";
   const button = settings.buttonColor || "#4da6ff";
   
@@ -983,9 +989,33 @@ function applySiteColors() {
   document.documentElement.style.setProperty("--custom-brand-dark", adjustBrightness(button, -20));
   document.documentElement.style.setProperty("--custom-brand-gradient", `linear-gradient(135deg, ${button}, ${adjustBrightness(button, 20)})`);
   
-  siteSettingsForm.elements.backgroundColor.value = bg;
-  siteSettingsForm.elements.accentColor.value = accent;
-  siteSettingsForm.elements.buttonColor.value = button;
+  document.body.style.backgroundColor = bg;
+  if (bgImage) {
+    document.body.style.backgroundImage = `url("${bgImage}")`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+  } else {
+    document.body.style.backgroundImage = "";
+  }
+  
+  const panels = document.querySelectorAll(".panel, .hero-card, .division-table-card, .fixture-card, .result-card, .empty-state, .team-chip");
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : "42, 74, 106";
+  };
+  panels.forEach(p => {
+    p.style.backgroundColor = `rgba(${hexToRgb(panel)}, ${transparency})`;
+  });
+  
+  if (siteSettingsForm) {
+    siteSettingsForm.elements.backgroundColor.value = bg;
+    siteSettingsForm.elements.backgroundImage.value = bgImage;
+    siteSettingsForm.elements.panelColor.value = panel;
+    siteSettingsForm.elements.panelTransparency.value = transparency;
+    siteSettingsForm.elements.accentColor.value = accent;
+    siteSettingsForm.elements.buttonColor.value = button;
+  }
 }
 
 function adjustBrightness(hex, percent) {
