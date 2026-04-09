@@ -70,13 +70,39 @@ const importButton = document.querySelector("#importButton");
 const importData = document.querySelector("#importData");
 const siteSettingsForm = document.querySelector("#siteSettingsForm");
 const profilePictureInput = document.querySelector("#profilePictureInput");
+const modalProfileImg = document.querySelector("#modalProfileImg");
+const modalProfileInitial = document.querySelector("#modalProfileInitial");
 const sectionOrder = ["overview", "payment", "results", "tables", "profiles", "submit", "admin"];
+
+const profileModal = document.querySelector("#profileModal");
+const settingsModal = document.querySelector("#settingsModal");
+const openProfileModal = document.querySelector("#openProfileModal");
+const openSettingsBtn = document.querySelector("#openSettingsBtn");
+const openProfileSettingsBtn = document.querySelector("#openProfileSettingsBtn");
+const closeProfileModal = document.querySelector("#closeProfileModal");
+const closeSettingsModal = document.querySelector("#closeSettingsModal");
+const profileModalBackdrop = document.querySelector("#profileModalBackdrop");
+const settingsModalBackdrop = document.querySelector("#settingsModalBackdrop");
+const themeToggle = document.querySelector("#themeToggle");
+
+function openModal(modal) { if (modal) modal.hidden = false; }
+function closeModal(modal) { if (modal) modal.hidden = true; }
+
+openProfileModal?.addEventListener("click", () => openModal(profileModal));
+openSettingsBtn?.addEventListener("click", () => openModal(settingsModal));
+openProfileSettingsBtn?.addEventListener("click", () => { closeModal(settingsModal); openModal(profileModal); });
+closeProfileModal?.addEventListener("click", () => closeModal(profileModal));
+closeSettingsModal?.addEventListener("click", () => closeModal(settingsModal));
+profileModalBackdrop?.addEventListener("click", () => closeModal(profileModal));
+settingsModalBackdrop?.addEventListener("click", () => closeModal(settingsModal));
+
+themeToggle?.addEventListener("change", () => toggleTheme());
+if (themeToggle && document.body.classList.contains("theme-light")) {
+  themeToggle.checked = true;
+}
 
 navButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
 mobileNavButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
-logoutButton.addEventListener("click", signOut);
-themeToggleButton.addEventListener("click", toggleTheme);
-topbarThemeToggleButton.addEventListener("click", toggleTheme);
 installButton.addEventListener("click", promptInstall);
 topbarInstallButton.addEventListener("click", promptInstall);
 matchForm.addEventListener("submit", submitMatch);
@@ -282,35 +308,29 @@ function renderProfile() {
   if (profileHeaderDivision) profileHeaderDivision.textContent = getDivisionName(user.divisionId);
   if (profileQuickStats) {
     profileQuickStats.innerHTML = `
-      <div class="profile-stat-card">
-        <div class="stat-value">${profileStats.wins}</div>
-        <div class="stat-label">Wins</div>
-      </div>
-      <div class="profile-stat-card">
-        <div class="stat-value">${profileStats.played}</div>
-        <div class="stat-label">Matches Played</div>
-      </div>
-      <div class="profile-stat-card">
-        <div class="stat-value">${profileStats.winRate}%</div>
-        <div class="stat-label">Win Rate</div>
-      </div>
-      <div class="profile-stat-card">
-        <div class="stat-value">${formatAverage(profileStats.average)}</div>
-        <div class="stat-label">Match Average</div>
-      </div>
-      <div class="profile-stat-card">
-        <div class="stat-value">${profileStats.avg}</div>
-        <div class="stat-label">3-Dart Average</div>
-      </div>
-      <div class="profile-stat-card">
-        <div class="stat-value">${profileStats.legsWon}-${profileStats.legsLost}</div>
-        <div class="stat-label">Legs Won-Lost</div>
-      </div>
-      <div class="profile-stat-card">
-        <div class="stat-value">${profileStats.total180s}</div>
-        <div class="stat-label">180s Hit</div>
-      </div>
-      <div class="profile-stat-card">
+      <span>${profileStats.wins}W - ${profileStats.played - profileStats.wins}L</span>
+      <span>${profileStats.winRate}% Win</span>
+      <span>Avg: ${profileStats.avg}</span>
+    `;
+  }
+  
+  if (modalProfileImg) {
+    if (currentProfilePicture) {
+      modalProfileImg.src = currentProfilePicture;
+      modalProfileImg.style.display = "block";
+      modalProfileInitial.style.display = "none";
+    } else {
+      modalProfileImg.style.display = "none";
+      modalProfileInitial.textContent = user.username?.charAt(0).toUpperCase() || "?";
+      modalProfileInitial.style.display = "flex";
+    }
+  }
+  
+  profileForm.elements.profileUsername.value = user.username;
+  profileForm.elements.profileThreeDartAverage.value = user.threeDartAverage ?? "";
+  profileForm.elements.profileDartCounterLink.value = user.dartCounterLink ?? "";
+  profileForm.elements.profileBio.value = user.bio ?? "";
+}
         <div class="stat-value">${profileStats.highScore || 0}</div>
         <div class="stat-label">High Score</div>
       </div>
