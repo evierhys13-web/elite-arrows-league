@@ -6,31 +6,89 @@
   <title>Elite Arrows Dashboard</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#1a2b3d">
-  <link rel="stylesheet" href="styles.css?v=17">
+  <link rel="stylesheet" href="styles.css?v=18">
 </head>
 <body class="dashboard-page">
   <div class="page-shell page-shell-wide">
     <section class="app-shell">
       <aside class="app-sidebar panel">
-        <div class="sidebar-logo" style="display:none">
-          <img src="/EliteArrows%20logo.jpg" alt="Elite Arrows Logo">
-        </div>
         <nav class="sidebar-nav">
-          <button class="nav-button is-active" type="button" data-view="overview">Home</button>
-          <button class="nav-button" type="button" data-view="payment">Subscription</button>
-          <button class="nav-button" type="button" data-view="tables">Table</button>
-          <button class="nav-button" type="button" data-view="results">Results</button>
-          <button class="nav-button" type="button" data-view="matches">Match Log</button>
-          <button class="nav-button" type="button" data-view="profiles">Players</button>
-          <button class="nav-button" type="button" data-view="fixtures">Fixtures</button>
-          <button class="nav-button" type="button" data-view="submit">Submit Result</button>
-          <button class="nav-button" id="adminNavButton" type="button" data-view="admin" hidden>Admin</button>
+          <a class="nav-link is-active" href="/dashboard.html" data-page="overview">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Home
+          </a>
+          <a class="nav-link" href="/dashboard.html?page=payment" data-page="payment">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+              <line x1="1" y1="10" x2="23" y2="10"></line>
+            </svg>
+            Subscription
+          </a>
+          <a class="nav-link" href="/dashboard.html?page=tables" data-page="tables">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20V10"></path>
+              <path d="M18 20V4"></path>
+              <path d="M6 20v-4"></path>
+            </svg>
+            Table
+          </a>
+          <a class="nav-link" href="/dashboard.html?page=results" data-page="results">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Results
+          </a>
+          <a class="nav-link" href="/dashboard.html?page=matches" data-page="matches">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            Match Log
+          </a>
+          <a class="nav-link" href="/dashboard.html?page=profiles" data-page="profiles">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            Players
+          </a>
+          <a class="nav-link" href="/dashboard.html?page=submit" data-page="submit">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Submit Result
+          </a>
+          <a class="nav-link" href="/chat.html">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Open Chat
+          </a>
         </nav>
         <div class="sidebar-actions">
-          <button class="ghost-button" id="installButton" type="button" hidden>Install App</button>
-          <button class="ghost-button" id="themeToggleButton" type="button">Light Mode</button>
-          <a class="ghost-button button-link" href="/chat.html">Open Chat</a>
-          <button class="ghost-button" id="logoutButton" type="button">Sign Out</button>
+          <a class="nav-link" href="/settings.html">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            Settings
+          </a>
+          <button class="ghost-button" id="logoutButton" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Sign Out
+          </button>
         </div>
       </aside>
 
@@ -40,16 +98,10 @@
             <img src="/EliteArrows%20logo.jpg" alt="Elite Arrows">
           </div>
           <h1 class="header-brand">Elite Arrows</h1>
-          <button class="settings-btn" id="openSettingsBtn" type="button">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-          </button>
         </header>
 
         <section class="panel home-profile-card" id="profileHeader">
-          <div class="home-profile-content" id="openProfileModal">
+          <a href="/settings-profile.html" class="home-profile-content">
             <div class="home-profile-avatar">
               <img id="profileAvatarImg" src="" alt="Profile Picture">
               <span id="profileAvatarInitial" class="avatar-initial"></span>
@@ -59,7 +111,7 @@
               <p id="profileHeaderDivision" class="profile-division"></p>
             </div>
             <div class="home-profile-stats" id="profileQuickStats"></div>
-          </div>
+          </a>
         </section>
 
         <section class="action-buttons">
@@ -80,7 +132,7 @@
             </svg>
             Play Online
           </button>
-          <button class="action-btn action-btn-primary" type="button" onclick="setActiveSection('submit')">
+          <button class="action-btn action-btn-primary" type="button" onclick="window.location.href='/dashboard.html?page=submit'">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
             </svg>
@@ -94,6 +146,22 @@
             <span id="seasonTitle">2026 Season</span>
           </div>
           <div class="hero-metrics" id="seasonMetrics"></div>
+        </section>
+
+        <section class="panel section-view is-active" data-section="overview">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Overview</p><h2>Quick Stats</h2></div>
+          </div>
+          <div class="hero-metrics" id="overviewMetrics"></div>
+          <div class="section-gap">
+            <button class="primary-button" id="openSubscriptionButton" type="button">Subscription</button>
+          </div>
+          <div class="section-gap">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Announcements</p><h3>League Updates</h3></div>
+            </div>
+            <div id="announcementCards" class="result-list"></div>
+          </div>
         </section>
 
         <section class="panel section-view" data-section="payment">
@@ -293,102 +361,16 @@
           </div>
         </section>
       </main>
-
     </section>
   </div>
 
   <nav class="mobile-bottom-nav panel" aria-label="Primary">
-    <button class="mobile-nav-button is-active" type="button" data-view="overview">Home</button>
-    <button class="mobile-nav-button" type="button" data-view="payment">Subscription</button>
-    <button class="mobile-nav-button" type="button" data-view="results">Results</button>
-    <button class="mobile-nav-button" type="button" data-view="tables">Table</button>
-    <button class="mobile-nav-button" type="button" data-view="profiles">Players</button>
+    <a class="mobile-nav-link is-active" href="/dashboard.html" data-page="overview">Home</a>
+    <a class="mobile-nav-link" href="/dashboard.html?page=payment" data-page="payment">Subscription</a>
+    <a class="mobile-nav-link" href="/dashboard.html?page=results" data-page="results">Results</a>
+    <a class="mobile-nav-link" href="/dashboard.html?page=tables" data-page="tables">Table</a>
+    <a class="mobile-nav-link" href="/dashboard.html?page=profiles" data-page="profiles">Players</a>
   </nav>
-
-  <div id="profileModal" class="modal" hidden>
-    <div class="modal-backdrop" id="profileModalBackdrop"></div>
-    <div class="modal-content panel">
-      <div class="modal-header">
-        <h2>Edit Profile</h2>
-        <button class="modal-close" id="closeProfileModal" type="button">&times;</button>
-      </div>
-      <form id="profileForm" class="stack-form">
-        <div class="profile-photo-edit">
-          <div class="modal-avatar">
-            <img id="modalProfileImg" src="" alt="Profile Picture">
-            <span id="modalProfileInitial" class="avatar-initial"></span>
-          </div>
-          <label class="photo-upload-btn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-              <circle cx="12" cy="13" r="4"></circle>
-            </svg>
-            Change Photo
-            <input type="file" id="profilePictureInput" accept="image/*" hidden>
-          </label>
-        </div>
-        <label>Username<input name="profileUsername" type="text" maxlength="30" required></label>
-        <label>3-dart average<input name="profileThreeDartAverage" type="number" step="0.01" min="0" max="150"></label>
-        <label>DartCounter link<input name="profileDartCounterLink" type="url" placeholder="https://www.dartcounter.net/..."></label>
-        <label>Bio<textarea name="profileBio" rows="4" placeholder="Write a short bio..."></textarea></label>
-        <button class="primary-button" type="submit">Save Changes</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="settingsModal" class="modal" hidden>
-    <div class="modal-backdrop" id="settingsModalBackdrop"></div>
-    <div class="modal-content panel">
-      <div class="modal-header">
-        <h2>Settings</h2>
-        <button class="modal-close" id="closeSettingsModal" type="button">&times;</button>
-      </div>
-      <div class="settings-list">
-        <button class="settings-item" id="openProfileSettingsBtn" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          Profile Settings
-        </button>
-        <div class="settings-item settings-toggle">
-          <div class="settings-item-left">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            Dark Mode
-          </div>
-          <label class="toggle-switch">
-            <input type="checkbox" id="themeToggle">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <a class="settings-item" href="/chat.html">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          Chat
-        </a>
-        <button class="settings-item settings-item-danger" id="logoutButton" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
-          </svg>
-          Sign Out
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script src="dashboard-app.js?v=13"></script>
+  <script src="dashboard-app.js?v=14"></script>
 </body>
 </html>

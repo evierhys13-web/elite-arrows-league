@@ -18,7 +18,7 @@ let state = {
 
 let currentProfilePicture = "";
 
-let activeSection = "overview";
+let activeSection = getPageFromURL();
 let deferredInstallPrompt = null;
 let touchStartX = 0;
 let touchStartY = 0;
@@ -28,6 +28,27 @@ let seasonTimerHandle = null;
 const navButtons = [...document.querySelectorAll(".nav-button")];
 const mobileNavButtons = [...document.querySelectorAll(".mobile-nav-button")];
 const sectionViews = [...document.querySelectorAll(".section-view")];
+const navLinks = [...document.querySelectorAll(".nav-link")];
+const mobileNavLinks = [...document.querySelectorAll(".mobile-nav-link")];
+
+function getPageFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("page") || "overview";
+}
+
+function updateNavigationHighlight() {
+  navLinks.forEach(link => {
+    const page = link.dataset.page;
+    link.classList.toggle("is-active", page === activeSection);
+  });
+  mobileNavLinks.forEach(link => {
+    const page = link.dataset.page;
+    link.classList.toggle("is-active", page === activeSection);
+  });
+  sectionViews.forEach(section => {
+    section.classList.toggle("is-active", section.dataset.section === activeSection);
+  });
+}
 const adminNavButton = document.querySelector("#adminNavButton");
 const adminSection = document.querySelector('[data-section="admin"]');
 const dashboardMetrics = document.querySelector("#dashboardMetrics");
@@ -101,8 +122,6 @@ if (themeToggle && document.body.classList.contains("theme-light")) {
   themeToggle.checked = true;
 }
 
-navButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
-mobileNavButtons.forEach((button) => button.addEventListener("click", () => setActiveSection(button.dataset.view)));
 installButton.addEventListener("click", promptInstall);
 topbarInstallButton.addEventListener("click", promptInstall);
 matchForm.addEventListener("submit", submitMatch);
@@ -118,7 +137,7 @@ importButton.addEventListener("click", importLeagueData);
 siteSettingsForm.addEventListener("submit", saveSiteSettings);
 document.querySelector("#resetSiteColorsButton")?.addEventListener("click", resetSiteColors);
 profilePictureInput?.addEventListener("change", handleProfilePictureUpload);
-openSubscriptionButton.addEventListener("click", () => setActiveSection("payment"));
+openSubscriptionButton?.addEventListener("click", () => { window.location.href = "/dashboard.html?page=payment"; });
 
 document.addEventListener("touchstart", handleTouchStart, { passive: true });
 document.addEventListener("touchend", handleTouchEnd, { passive: true });
@@ -185,41 +204,7 @@ function render() {
 const freeAccessSections = ["overview", "payment", "profiles"];
 
 function renderNavigation() {
-  const isAdmin = Boolean(currentUser()?.isAdmin);
-  const hasPaid = hasUnlockedAccess();
-  adminNavButton.hidden = !isAdmin;
-  adminSection.hidden = !isAdmin;
-  navButtons.forEach((button) => {
-    if (button.dataset.view === "admin") {
-      button.hidden = !isAdmin;
-    }
-    if (!hasPaid && !freeAccessSections.includes(button.dataset.view) && !isAdmin) {
-      button.disabled = true;
-      button.classList.add("is-locked");
-    } else {
-      button.disabled = false;
-      button.classList.remove("is-locked");
-    }
-    button.classList.toggle("is-active", button.dataset.view === activeSection);
-  });
-  mobileNavButtons.forEach((button) => {
-    if (!hasPaid && !freeAccessSections.includes(button.dataset.view) && !isAdmin) {
-      button.disabled = true;
-      button.classList.add("is-locked");
-    } else {
-      button.disabled = false;
-      button.classList.remove("is-locked");
-    }
-    button.classList.toggle("is-active", button.dataset.view === activeSection);
-  });
-  sectionViews.forEach((section) => section.classList.toggle("is-active", section.dataset.section === activeSection));
-  if (!isAdmin && activeSection === "admin") {
-    activeSection = "overview";
-    renderNavigation();
-  } else if (!hasPaid && !freeAccessSections.includes(activeSection) && !isAdmin) {
-    activeSection = "overview";
-    renderNavigation();
-  }
+  updateNavigationHighlight();
 }
 
 function renderDashboardMetrics() {
@@ -949,7 +934,7 @@ function createAdminItemCard(title, description, onEdit, onDelete) {
 function loadTeam(team) {
   teamForm.elements.teamId.value = team.id;
   teamForm.elements.teamName.value = team.name;
-  setActiveSection("admin");
+  window.location.href = "/dashboard.html?page=admin";
 }
 
 function loadAdminPlayer(player) {
@@ -962,7 +947,7 @@ function loadAdminPlayer(player) {
   adminPlayerForm.elements.playerDartCounterLink.value = player.dartCounterLink ?? "";
   adminPlayerForm.elements.playerBio.value = player.bio ?? "";
   adminPlayerForm.elements.playerIsAdmin.checked = Boolean(player.isAdmin);
-  setActiveSection("admin");
+  window.location.href = "/dashboard.html?page=admin";
 }
 
 function loadFixture(fixture) {
@@ -971,14 +956,14 @@ function loadFixture(fixture) {
   fixtureForm.elements.fixturePlayerTwoId.value = fixture.playerTwoId;
   fixtureForm.elements.fixtureScheduledDate.value = fixture.scheduledDate;
   fixtureForm.elements.fixtureNotes.value = fixture.notes ?? "";
-  setActiveSection("admin");
+  window.location.href = "/dashboard.html?page=admin";
 }
 
 function loadAnnouncement(announcement) {
   announcementForm.elements.announcementId.value = announcement.id;
   announcementForm.elements.announcementTitle.value = announcement.title;
   announcementForm.elements.announcementBody.value = announcement.body;
-  setActiveSection("admin");
+  window.location.href = "/dashboard.html?page=admin";
 }
 
 function currentUser() {
@@ -1090,15 +1075,6 @@ function createEmptyState(title, description) {
   return card;
 }
 
-function setActiveSection(nextSection) {
-  const isAdmin = Boolean(currentUser()?.isAdmin);
-  const hasPaid = hasUnlockedAccess();
-  if (nextSection === "admin" && !isAdmin) return;
-  if (!hasPaid && !isAdmin && !freeAccessSections.includes(nextSection)) return;
-  activeSection = nextSection;
-  renderNavigation();
-}
-
 function signOut() {
   localStorage.removeItem(sessionKey);
   sessionStorage.removeItem(sessionKey);
@@ -1202,8 +1178,12 @@ function handleTouchEnd(event) {
   const availableSections = sectionOrder.filter((section) => section !== "admin" || currentUser()?.isAdmin);
   const currentIndex = availableSections.indexOf(activeSection);
   if (currentIndex === -1) return;
-  if (deltaX < 0 && currentIndex < availableSections.length - 1) setActiveSection(availableSections[currentIndex + 1]);
-  if (deltaX > 0 && currentIndex > 0) setActiveSection(availableSections[currentIndex - 1]);
+  if (deltaX < 0 && currentIndex < availableSections.length - 1) {
+    window.location.href = "/dashboard.html?page=" + availableSections[currentIndex + 1];
+  }
+  if (deltaX > 0 && currentIndex > 0) {
+    window.location.href = "/dashboard.html?page=" + availableSections[currentIndex - 1];
+  }
 }
 
 function registerServiceWorker() {
