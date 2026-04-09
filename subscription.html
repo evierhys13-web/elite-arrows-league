@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscription - Elite Arrows</title>
+  <link rel="stylesheet" href="styles.css?v=19" />
+</head>
+<body class="dashboard-page">
+  <div class="page-shell page-shell-wide">
+    <section class="app-shell">
+      <aside class="app-sidebar panel">
+        <div class="sidebar-logo">
+          <img src="/EliteArrows%20logo.jpg" alt="Elite Arrows">
+        </div>
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="/home" aria-label="Home">Home</a>
+          <a class="nav-link is-active" href="/subscription" aria-label="Subscription">Subscription</a>
+          <a class="nav-link" href="/table" aria-label="Table">Table</a>
+          <a class="nav-link" href="/results" aria-label="Results">Results</a>
+          <a class="nav-link" href="/match-log" aria-label="Match Log">Match Log</a>
+          <a class="nav-link" href="/players" aria-label="Players">Players</a>
+          <a class="nav-link" href="/submit-result" aria-label="Submit Result">Submit Result</a>
+          <a class="nav-link" href="/chat" aria-label="Chat">Open Chat</a>
+          <a class="nav-link" href="/settings" aria-label="Settings">Settings</a>
+          <button class="ghost-button" id="logoutButton" type="button">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Sign Out
+          </button>
+        </nav>
+      </aside>
+
+      <main class="app-main">
+        <header class="site-header">
+          <div class="header-logo">
+            <img src="/EliteArrows%20logo.jpg" alt="Elite Arrows">
+          </div>
+          <h1 class="header-brand">Subscription</h1>
+        </header>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Subscription</p><h2>Subscription And Payment</h2></div>
+          </div>
+          <div id="paymentStatusCard" class="result-list"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div><h3>Available Payment Methods</h3></div>
+          </div>
+          <div id="paymentOptionsCard" class="stack-form"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div><h3>Submit Payment</h3></div>
+          </div>
+          <form id="paymentForm" class="stack-form">
+            <label>Method
+              <select name="paymentMethod" required>
+                <option value="">Choose a payment method</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Monzo">Monzo</option>
+              </select>
+            </label>
+            <label>Payment reference<input name="paymentReference" type="text" required></label>
+            <label>Optional proof of payment<input name="paymentProof" type="file" accept="image/*,video/*,audio/*"></label>
+            <button class="primary-button" type="submit">Submit Payment</button>
+          </form>
+        </section>
+      </main>
+    </section>
+  </div>
+  <script src="subscription-app.js?v=1"></script>
+</body>
+</html>
