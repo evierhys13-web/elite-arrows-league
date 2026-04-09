@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat - Elite Arrows</title>
+  <title>Submit Result - Elite Arrows</title>
   <link rel="stylesheet" href="styles.css?v=18" />
 </head>
-<body class="chat-page">
+<body class="submit-page">
   <header class="app-header">
     <div class="header-logo"><img src="/EliteArrows%20logo.jpg" alt="Elite Arrows"/></div>
     <div class="header-title">Elite Arrows</div>
   </header>
   <main class="app-main">
     <section class="panel">
-      <h2>Chat</h2>
-      <div id="chatBox" class="result-list"></div>
+      <h2>Submit Result</h2>
+      <form class="stack-form">
+        <label>Opponent<select><option>Player A</option></select></label>
+        <label>Score<input type="text"/></label>
+        <button class="primary-button" type="submit">Submit</button>
+      </form>
     </section>
   </main>
 </body>

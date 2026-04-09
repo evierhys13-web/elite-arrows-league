@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile - Elite Arrows</title>
+  <link rel="stylesheet" href="styles.css?v=18" />
+</head>
+<body class="profile-page">
+  <header class="app-header">
+    <div class="header-logo"><img src="/EliteArrows%20logo.jpg" alt="Elite Arrows"/></div>
+    <div class="header-title">Elite Arrows</div>
+  </header>
+  <main class="app-main">
+    <section class="panel">
+      <h2>Profile</h2>
+      <form id="profileForm" class="stack-form">
+        <div class="profile-photo-edit">
+          <div class="profile-avatar-large" id="profileAvatar">
+            <img id="profileAvatarImg" src="" alt="Profile Picture">
+            <span id="profileAvatarInitial" class="avatar-initial"></span>
+          </div>
+          <label class="photo-upload-btn">
+            Change Photo
+            <input type="file" id="profilePictureInput" accept="image/*" hidden>
+          </label>
+        </div>
+        <label>Username<input name="profileUsername" type="text" maxlength="30" required></label>
+        <label>Bio<textarea name="profileBio" rows="4"></textarea></label>
+        <label>DartCounter link<input name="profileDartCounterLink" type="url"></label>
+        <label>3-dart average<input name="profileThreeDartAverage" type="number" step="0.01" min="0" max="150"></label>
+        <button class="primary-button" type="submit">Save Changes</button>
+      </form>
+    </section>
+  </main>
+</body>
+  <script src="profile-app.js?v=1"></script>
+  <script src="gate-app.js"></script>
+</html>

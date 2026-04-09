@@ -39,7 +39,24 @@ http.createServer(async (request, response) => {
       return;
     }
 
-    await serveStatic(response, url.pathname);
+    // Route-based HTML pages (no API)
+    const routeMap = {
+      "/": "/home.html",
+      "/home": "/home.html",
+      "/settings": "/settings.html",
+      "/subscription": "/subscription.html",
+      "/table": "/table.html",
+      "/tables": "/table.html",
+      "/results": "/results.html",
+      "/match-log": "/match-log.html",
+      "/matches": "/match-log.html",
+      "/players": "/players.html",
+      "/submit-result": "/submit-result.html",
+      "/chat": "/chat.html",
+      "/profile": "/profile.html"
+    };
+    const target = routeMap[url.pathname] || "/home.html";
+    await serveStatic(response, target);
   } catch {
     response.writeHead(500, { "Content-Type": "application/json; charset=utf-8" });
     response.end(JSON.stringify({ error: "Internal server error" }));
@@ -54,6 +71,39 @@ async function handleApi(request, response, url) {
   const sessionUserId = payload.sessionUserId ?? url.searchParams.get("sessionUserId") ?? null;
 
   if (request.method === "GET" && url.pathname === "/api/bootstrap") {
+    return sendJson(response, 200, sanitizeState(state));
+  }
+
+  // Simple API: provide a profile for a guest user when not authenticated
+  if (request.method === "GET" && url.pathname === "/api/profile") {
+    let guest = state.players.find((p) => p.id === "guest");
+    if (!guest) {
+      guest = { id: "guest", username: "Guest", bio: "", threeDartAverage: 0, profilePicture: "", dartCounterLink: "" };
+      state.players.push(guest);
+      await writeState(state);
+    }
+    return sendJson(response, 200, guest);
+  }
+
+  if (request.method === "POST" && url.pathname === "/api/profile") {
+    // payload contains fields for profile (provided by outer scope)
+    let guest = state.players.find((p) => p.id === "guest");
+    if (!guest) {
+      guest = { id: "guest", username: payload?.profileUsername ?? "Guest", bio: payload?.profileBio ?? "", threeDartAverage: payload?.profileThreeDartAverage ?? 0, profilePicture: payload?.profilePicture ?? "", dartCounterLink: payload?.profileDartCounterLink ?? "" };
+      state.players.push(guest);
+    } else {
+      if (payload?.profileUsername) guest.username = payload.profileUsername;
+      if (payload?.profileBio) guest.bio = payload.profileBio;
+      if (payload?.profileDartCounterLink) guest.dartCounterLink = payload.profileDartCounterLink;
+      if (payload?.profileThreeDartAverage != null) guest.threeDartAverage = payload.profileThreeDartAverage;
+      if (payload?.profilePicture) guest.profilePicture = payload.profilePicture;
+    }
+    await writeState(state);
+    return sendJson(response, 200, guest);
+  }
+
+  // Lightweight client-side data provider for home/profile/settings pages
+  if (request.method === "GET" && url.pathname === "/api/state") {
     return sendJson(response, 200, sanitizeState(state));
   }
 
@@ -316,6 +366,11 @@ async function handleApi(request, response, url) {
     if (!currentUser) return sendJson(response, 401, { error: "You need to sign in first." });
 
     const username = payload.username?.trim();
+    // Optional: allow setting paid status via API for testing
+    if (payload.paymentStatus) {
+      currentUser.paymentStatus = payload.paymentStatus;
+      currentUser.paymentApprovedAt = payload.paymentApprovedAt || currentUser.paymentApprovedAt || new Date().toISOString();
+    }
     if (username && state.players.some((player) => player.id !== currentUser.id && player.username.toLowerCase() === username.toLowerCase())) {
       return sendJson(response, 400, { error: "That username is already in use." });
     }
@@ -1031,6 +1086,9 @@ function withSession(state, sessionUserId) {
 }
 
 function serializeState(state) {
+  const currentUserId = state.sessionUserId;
+  const currentUser = state.players.find((p) => p.id === currentUserId);
+  const hasPaid = currentUser?.paymentStatus === "paid";
   return {
     divisions: DIVISIONS,
     currentSeasonId: state.currentSeasonId,
@@ -1044,7 +1102,8 @@ function serializeState(state) {
     friendRequests: state.friendRequests,
     chats: state.chats,
     players: state.players,
-    matches: state.matches
+    matches: state.matches,
+    hasPaid
   };
 }
 

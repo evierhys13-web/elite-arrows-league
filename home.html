@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elite Arrows - Home</title>
+  <link rel="stylesheet" href="styles.css?v=18" />
+</head>
+<body class="home-page">
+  <header class="app-header">
+    <div class="header-logo"><img src="/EliteArrows%20logo.jpg" alt="Elite Arrows"/></div>
+    <div class="header-title">Elite Arrows</div>
+  </header>
+
+  <main class="app-main">
+    <section class="profile-header compact" id="homeProfile">
+      <a href="/profile" class="home-profile-content">
+        <div class="home-profile-avatar">
+          <img src="" alt="Profile" />
+        </div>
+        <div class="home-profile-info">
+          <h2 id="homeProfileName">Player</h2>
+          <p id="homeProfileRating" class="profile-division">Rating: 1200</p>
+        </div>
+      </a>
+    </section>
+    <div class="season-overview" id="homeSeasonOverview"></div>
+
+    <section class="action-buttons">
+      <button class="action-btn" type="button">Play Local</button>
+      <button class="action-btn" type="button">Play Online</button>
+      <button class="action-btn" type="button" onclick="location.href='/dashboard.html?page=submit'">Submit Result</button>
+    </section>
+
+    <section class="panel season-overview-card">
+      <div class="season-card-header"><h3>Season Overview</h3><span>2026 Season</span></div>
+      <div class="hero-metrics" id="homeSeasonMetrics"></div>
+    </section>
+  </main>
+  <script src="home-app.js?v=1"></script>
+  <script src="gate-app.js"></script>
+</body>
+</html>

@@ -3,19 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chat - Elite Arrows</title>
+  <title>Table - Elite Arrows</title>
   <link rel="stylesheet" href="styles.css?v=18" />
 </head>
-<body class="chat-page">
+  <body class="table-page">
   <header class="app-header">
     <div class="header-logo"><img src="/EliteArrows%20logo.jpg" alt="Elite Arrows"/></div>
     <div class="header-title">Elite Arrows</div>
   </header>
   <main class="app-main">
     <section class="panel">
-      <h2>Chat</h2>
-      <div id="chatBox" class="result-list"></div>
+      <h2>Table</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Rank</th><th>Player</th><th>Division</th><th>Pts</th></tr></thead>
+          <tbody id="overallStandingsBody"></tbody>
+        </table>
+      </div>
     </section>
-  </main>
+</main>
+  <script src="table-app.js"></script>
+  <script src="gate-app.js"></script>
 </body>
 </html>
