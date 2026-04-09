@@ -169,6 +169,8 @@ function render() {
   renderAdmin();
 }
 
+const freeAccessSections = ["overview", "payment", "profiles"];
+
 function renderNavigation() {
   const isAdmin = Boolean(currentUser()?.isAdmin);
   const hasPaid = hasUnlockedAccess();
@@ -178,7 +180,7 @@ function renderNavigation() {
     if (button.dataset.view === "admin") {
       button.hidden = !isAdmin;
     }
-    if (!hasPaid && !["overview", "payment", "admin"].includes(button.dataset.view)) {
+    if (!hasPaid && !freeAccessSections.includes(button.dataset.view) && !isAdmin) {
       button.disabled = true;
       button.classList.add("is-locked");
     } else {
@@ -188,7 +190,7 @@ function renderNavigation() {
     button.classList.toggle("is-active", button.dataset.view === activeSection);
   });
   mobileNavButtons.forEach((button) => {
-    if (!hasPaid && button.dataset.view !== "overview") {
+    if (!hasPaid && !freeAccessSections.includes(button.dataset.view) && !isAdmin) {
       button.disabled = true;
       button.classList.add("is-locked");
     } else {
@@ -201,8 +203,8 @@ function renderNavigation() {
   if (!isAdmin && activeSection === "admin") {
     activeSection = "overview";
     renderNavigation();
-  } else if (!hasPaid && !["overview", "payment", "admin"].includes(activeSection)) {
-    activeSection = "payment";
+  } else if (!hasPaid && !freeAccessSections.includes(activeSection) && !isAdmin) {
+    activeSection = "overview";
     renderNavigation();
   }
 }
@@ -293,21 +295,37 @@ function renderProfile() {
   if (profileHeaderDivision) profileHeaderDivision.textContent = getDivisionName(user.divisionId);
   if (profileQuickStats) {
     profileQuickStats.innerHTML = `
-      <div class="stat-item">
+      <div class="profile-stat-card">
         <div class="stat-value">${profileStats.wins}</div>
         <div class="stat-label">Wins</div>
       </div>
-      <div class="stat-item">
+      <div class="profile-stat-card">
         <div class="stat-value">${profileStats.played}</div>
-        <div class="stat-label">Played</div>
+        <div class="stat-label">Matches Played</div>
       </div>
-      <div class="stat-item">
+      <div class="profile-stat-card">
+        <div class="stat-value">${profileStats.winRate}%</div>
+        <div class="stat-label">Win Rate</div>
+      </div>
+      <div class="profile-stat-card">
         <div class="stat-value">${formatAverage(profileStats.average)}</div>
-        <div class="stat-label">Avg</div>
+        <div class="stat-label">Match Average</div>
       </div>
-      <div class="stat-item">
+      <div class="profile-stat-card">
         <div class="stat-value">${profileStats.avg}</div>
-        <div class="stat-label">3-Dart Avg</div>
+        <div class="stat-label">3-Dart Average</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-value">${profileStats.legsWon}-${profileStats.legsLost}</div>
+        <div class="stat-label">Legs Won-Lost</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-value">${profileStats.total180s}</div>
+        <div class="stat-label">180s Hit</div>
+      </div>
+      <div class="profile-stat-card">
+        <div class="stat-value">${profileStats.highScore || 0}</div>
+        <div class="stat-label">High Score</div>
       </div>
     `;
   }
@@ -348,25 +366,47 @@ function updateProfileAvatars() {
 }
 
 function calculatePlayerStatsForUser(playerId) {
-  const matches = approvedMatches().filter(m => m.playerOneId === playerId || m.playerTwoId === playerId);
-  const userMatches = matches.filter(m => m.playerOneId === playerId || m.playerTwoId === playerId);
-  let wins = 0, played = 0;
+  const userMatches = approvedMatches().filter(m => m.playerOneId === playerId || m.playerTwoId === playerId);
+  let wins = 0, played = 0, legsWon = 0, legsLost = 0, total180s = 0, totalAverage = 0;
   
   userMatches.forEach(match => {
     played++;
-    if (match.playerOneId === playerId && match.playerOneScore > match.playerTwoScore) wins++;
-    if (match.playerTwoId === playerId && match.playerTwoScore > match.playerOneScore) wins++;
+    let playerLegs = 0, opponentLegs = 0, playerAverage = 0, player180s = 0;
+    
+    if (match.playerOneId === playerId) {
+      playerLegs = match.playerOneScore;
+      opponentLegs = match.playerTwoScore;
+      playerAverage = match.playerOneAverage || 0;
+      player180s = match.playerOne180s || 0;
+    } else {
+      playerLegs = match.playerTwoScore;
+      opponentLegs = match.playerOneScore;
+      playerAverage = match.playerTwoAverage || 0;
+      player180s = match.playerTwo180s || 0;
+    }
+    
+    legsWon += playerLegs;
+    legsLost += opponentLegs;
+    total180s += player180s;
+    totalAverage += playerAverage;
+    
+    if (playerLegs > opponentLegs) wins++;
   });
   
   const user = currentUser();
+  const winRate = played > 0 ? Math.round((wins / played) * 100) : 0;
+  const average = played > 0 ? (totalAverage / played).toFixed(1) : "-";
+  
   return {
     wins,
     played,
-    average: played > 0 ? ((userMatches.reduce((sum, m) => {
-      if (m.playerOneId === playerId) return sum + (m.playerOneAverage || 0);
-      return sum + (m.playerTwoAverage || 0);
-    }, 0)) / played).toFixed(1) : "-",
-    avg: formatAverage(user?.threeDartAverage)
+    winRate,
+    average,
+    avg: formatAverage(user?.threeDartAverage),
+    legsWon,
+    legsLost,
+    total180s,
+    highScore: user?.threeDartAverage || 0
   };
 }
 
@@ -1056,7 +1096,10 @@ function createEmptyState(title, description) {
 }
 
 function setActiveSection(nextSection) {
-  if (nextSection === "admin" && !currentUser()?.isAdmin) return;
+  const isAdmin = Boolean(currentUser()?.isAdmin);
+  const hasPaid = hasUnlockedAccess();
+  if (nextSection === "admin" && !isAdmin) return;
+  if (!hasPaid && !isAdmin && !freeAccessSections.includes(nextSection)) return;
   activeSection = nextSection;
   renderNavigation();
 }

@@ -6,7 +6,7 @@
   <title>Elite Arrows Dashboard</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#1a2b3d">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body class="dashboard-page">
   <div class="page-shell page-shell-wide">
@@ -35,47 +35,52 @@
       </aside>
 
       <main class="app-main">
-        <section class="profile-header panel" id="profileHeader">
-          <div class="profile-header-content">
-            <div class="profile-avatar-wrap">
-              <div class="profile-avatar" id="profileAvatar">
-                <img id="profileAvatarImg" src="" alt="Profile Picture">
-                <span id="profileAvatarInitial" class="avatar-initial"></span>
+        <section class="profile-hero panel" id="profileHeader">
+          <div class="profile-hero-content">
+            <div class="profile-main-card">
+              <div class="profile-avatar-wrap">
+                <div class="profile-avatar-large" id="profileAvatar">
+                  <img id="profileAvatarImg" src="" alt="Profile Picture">
+                  <span id="profileAvatarInitial" class="avatar-initial"></span>
+                </div>
+                <label class="avatar-edit-btn" for="profilePictureInput">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                </label>
+                <input type="file" id="profilePictureInput" accept="image/*" hidden>
               </div>
-              <label class="avatar-edit-btn" for="profilePictureInput">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                  <circle cx="12" cy="13" r="4"></circle>
-                </svg>
-              </label>
-              <input type="file" id="profilePictureInput" accept="image/*" hidden>
+              <div class="profile-details">
+                <h1 id="profileHeaderName"></h1>
+                <p id="profileHeaderDivision" class="profile-division"></p>
+                <div class="profile-actions">
+                  <button class="ghost-button" id="openProfileButton" type="button">Edit Profile</button>
+                </div>
+              </div>
             </div>
-            <div class="profile-info">
-              <h2 id="profileHeaderName"></h2>
-              <p id="profileHeaderDivision" class="profile-division"></p>
-              <div class="profile-quick-stats" id="profileQuickStats"></div>
+            <div class="profile-stats-grid" id="profileQuickStats">
             </div>
           </div>
-        </section>
-
-        <section class="panel season-banner">
-          <div class="panel-heading">
-            <div><p class="eyebrow">Season</p><h2 id="seasonTitle">2026 Season</h2></div>
-          </div>
-          <div class="hero-metrics" id="seasonMetrics"></div>
         </section>
 
         <section class="panel section-view is-active" data-section="overview">
           <div class="panel-heading">
-            <div><p class="eyebrow">Overview</p><h2>Quick Snapshot</h2></div>
+            <div><p class="eyebrow">Season</p><h2 id="seasonTitle">2026 Season</h2></div>
           </div>
-          <div class="hero-metrics" id="overviewMetrics"></div>
+          <div class="hero-metrics" id="seasonMetrics"></div>
           <div class="section-gap">
-            <button class="primary-button" id="openSubscriptionButton" type="button">Open Subscription</button>
+            <div class="panel-heading">
+              <div><p class="eyebrow">Overview</p><h2>Your Stats</h2></div>
+            </div>
+            <div class="hero-metrics" id="overviewMetrics"></div>
+          </div>
+          <div class="section-gap">
+            <button class="primary-button" id="openSubscriptionButton" type="button">Subscription</button>
           </div>
           <div class="section-gap">
             <div class="panel-heading">
-              <div><p class="eyebrow">Announcements</p><h3>Latest League Updates</h3></div>
+              <div><p class="eyebrow">Announcements</p><h3>League Updates</h3></div>
             </div>
             <div id="announcementCards" class="result-list"></div>
           </div>
@@ -318,6 +323,6 @@
     <button class="mobile-nav-button" type="button" data-view="tables">Table</button>
     <button class="mobile-nav-button" type="button" data-view="profiles">Players</button>
   </nav>
-  <script src="dashboard-app.js?v=7"></script>
+  <script src="dashboard-app.js?v=8"></script>
 </body>
 </html>
