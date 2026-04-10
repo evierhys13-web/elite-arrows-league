@@ -797,11 +797,11 @@ function normalizeFriendRequests(rawRequests) {
 
 function normalizePaymentOptions(rawOptions) {
   return {
-    bankTransfer: {
-      accountName: rawOptions?.bankTransfer?.accountName || "Elite Arrows League",
-      sortCode: rawOptions?.bankTransfer?.sortCode || "12-34-56",
-      accountNumber: rawOptions?.bankTransfer?.accountNumber || "12345678",
-      referenceHint: rawOptions?.bankTransfer?.referenceHint || "Use your username as the reference"
+bankTransfer: {
+      accountName: rawOptions?.bankTransfer?.accountName || "Rhys Howe",
+      sortCode: rawOptions?.bankTransfer?.sortCode || "60-09-09",
+      accountNumber: rawOptions?.bankTransfer?.accountNumber || "82049442",
+      referenceHint: rawOptions?.bankTransfer?.referenceHint || "elite arrows payment"
     },
     paypal: {
       email: rawOptions?.paypal?.email || "@Rhyshowe834",
