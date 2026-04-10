@@ -800,7 +800,7 @@ function normalizePaymentOptions(rawOptions) {
 bankTransfer: {
       accountName: rawOptions?.bankTransfer?.accountName || "Rhys Howe",
       sortCode: rawOptions?.bankTransfer?.sortCode || "60-09-09",
-      accountNumber: rawOptions?.bankTransfer?.accountNumber || "82049442",
+      accountNumber: rawOptions?.bankTransfer?.accountNumber || "80249442",
       referenceHint: rawOptions?.bankTransfer?.referenceHint || "elite arrows payment"
     },
     paypal: {
