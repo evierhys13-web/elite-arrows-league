@@ -1178,6 +1178,12 @@ textarea:focus {
   border-color: rgba(191, 59, 22, 0.45);
 }
 
+#paymentForm select, .payment-form select {
+  background: #87CEEB;
+  color: white;
+  border-color: #5bbce0;
+}
+
 textarea {
   resize: vertical;
   min-height: 120px;
